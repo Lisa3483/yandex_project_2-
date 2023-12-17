@@ -8,12 +8,13 @@ class StartMenu:
         screen = pygame.display.set_mode(size)
         pygame.display.set_caption('ээээ название игры')
 
-        pygame.draw.rect(screen, "green", (230, 140, 340, 70), 0)
-        pygame.draw.rect(screen, "green", (250, 220, 300, 50), 0)
-        pygame.draw.rect(screen, "green", (250, 290, 300, 50), 0)
-        pygame.draw.rect(screen, "green", (250, 360, 300, 50), 0)
-        pygame.draw.rect(screen, "green", (250, 430, 300, 50), 0)
-        pygame.draw.rect(screen, "green", (200, 10, 400, 120), 1)
+        pygame.draw.rect(screen, (0, 150, 0), (230, 140, 340, 70), 0)
+        pygame.draw.rect(screen, (0, 150, 0), (250, 220, 300, 50), 0)
+        pygame.draw.rect(screen, (0, 150, 0), (250, 290, 300, 50), 0)
+        pygame.draw.rect(screen, (0, 150, 0), (250, 360, 300, 50), 0)
+        pygame.draw.rect(screen, (0, 150, 0), (250, 430, 300, 50), 0)
+        pygame.draw.rect(screen, (0, 150, 0), (250, 500, 300, 50), 0)
+        pygame.draw.rect(screen, (0, 150, 0), (200, 10, 400, 120), 5)
 
         self.text_button(screen)
 
@@ -41,8 +42,12 @@ class StartMenu:
         text_y = 375
         screen.blit(text, (text_x, text_y))
 
-        text = font.render("Выход", True, (255, 255, 255))
+        text = font.render("Статистика", True, (255, 255, 255))
         text_y = 445
+        screen.blit(text, (text_x, text_y))
+
+        text = font.render("Выход", True, (255, 255, 255))
+        text_y = 515
         screen.blit(text, (text_x, text_y))
 
         font = pygame.font.Font(None, 100)
@@ -50,3 +55,4 @@ class StartMenu:
         text_x = 215
         text_y = 50
         screen.blit(text, (text_x, text_y))
+

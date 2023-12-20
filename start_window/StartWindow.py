@@ -1,7 +1,7 @@
 import pygame
 
 
-class StartMenu:
+class StartStateMenu:
     def __init__(self):
         size = 800, 600
         pygame.init()
@@ -55,4 +55,11 @@ class StartMenu:
         text_x = 215
         text_y = 50
         screen.blit(text, (text_x, text_y))
+    # def click_buttons(self):
+
+class Buttons(StartStateMenu):
+    def __init__(self):
+        super().__init__()
+
+    def click_buttons(self):
 

@@ -23,7 +23,7 @@ class Map():
         self.game = game
         self.screen = game.screen
 
-        self.scrolling = False
+        self.scrolling = True
 
         self.load_tileset("tileset.bmp")
 

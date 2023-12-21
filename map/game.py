@@ -100,7 +100,7 @@ class Game():
                     self.up = False
                     self.x -= self.speed  # Перемещаем персонажа влево
                     self.y -= self.speed  # И одновременно перемещаем его вверх
-                    self.map.scroll([self.speed, 0])
+                    self.map.scroll([self.speed, self.speed])
                 elif self.x < self.x_new and self.y < self.y_new:
                     self.left = False
                     self.right = True  # Отрисовываем анимацию перемещения вправо
@@ -108,7 +108,7 @@ class Game():
                     self.up = False
                     self.x += self.speed  # Перемещаем персонажа вправо
                     self.y += self.speed  # И одновременно перемещаем его вниз
-                    self.map.scroll([self.speed, 0])
+                    self.map.scroll([self.speed * (-1), self.speed * (-1)])
                 elif self.x < self.x_new and self.y > self.y_new:
                     self.left = False
                     self.right = True  # Отрисовываем анимацию перемещения вправо
@@ -116,7 +116,7 @@ class Game():
                     self.up = False
                     self.x += self.speed  # Перемещаем персонажа вправо
                     self.y -= self.speed  # И одновременно перемещаем его вверх
-                    self.map.scroll([self.speed, 0])
+                    self.map.scroll([self.speed * (-1), self.speed])
                 elif self.x > self.x_new and self.y < self.y_new:
                     self.left = True  # Отрисовываем анимацию перемещения влево
                     self.right = False
@@ -124,7 +124,7 @@ class Game():
                     self.up = False
                     self.x -= self.speed  # Перемещаем персонажа влево
                     self.y += self.speed  # И одновременно перемещаем его вниз
-                    self.map.scroll([self.speed, 0])
+                    self.map.scroll([self.speed, self.speed * (-1)])
             elif self.y != self.y_new:
                 if self.y < self.y_new:
                     self.left = False
@@ -132,14 +132,14 @@ class Game():
                     self.down = True  # Отрисовываем анимацию перемещения вниз
                     self.up = False
                     self.y += self.speed  # Перемещаем персонажа вниз
-                    self.map.scroll([self.speed, 0])
+                    self.map.scroll([0, self.speed * (-1)])
                 elif self.y > self.y_new:
                     self.left = False
                     self.right = False
                     self.down = False
                     self.up = True  # Отрисовываем анимацию перемещения вверх
                     self.y -= self.speed  # Перемещаем персонажа вверх
-                    self.map.scroll([self.speed, 0])
+                    self.map.scroll([0, self.speed])
             elif self.x != self.x_new:
                 if self.x < self.x_new:
                     self.x += self.speed  # Перемещаем персонажа вправо
@@ -147,14 +147,14 @@ class Game():
                     self.right = True  # Отрисовываем анимацию перемещения вправо
                     self.down = False
                     self.up = False
-                    self.map.scroll([self.speed, 0])
+                    self.map.scroll([self.speed * (-1), 0])
                 elif self.x > self.x_new:
                     self.x -= self.speed  # Перемещаем персонажа влево
                     self.left = True  # Отрисовываем анимацию перемещения влево
                     self.right = False
                     self.down = False
                     self.up = False
-                    self.map.scroll([0, self.speed])
+                    self.map.scroll([self.speed, 0])
         else:
             self.left = False
             self.right = False
@@ -213,8 +213,8 @@ class Game():
                     # random map
                     self.map.randomize()
 
-            elif event.type == MOUSEMOTION:
-                self.map.scroll(event.rel)
+            # elif event.type == MOUSEMOTION:
+            # self.map.scroll(event.rel)
         if self.button_pressed:
             '''Если левая кнопка мыши нажата, то вызываем функцию и персонаж начинает перемещаться в точку,
                 где находился курсор при нажатии'''

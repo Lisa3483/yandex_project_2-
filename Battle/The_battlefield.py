@@ -39,6 +39,26 @@ class Thebattlefield:
                           self.height * self.cell_size + self.top * 2))
         # отрисовка рамок для клеточного поля
 
+    def start_battle(self):
+        pass
+
+    def end_battle(self):
+        pass
+
+    def move(self):
+        pass
+
+    def attack(self):
+        pass
+
+    def units_on_board(self, *args, enemy_units):
+        # args - id юнитов в инвинтаре игрока, звыисит от того, как они будут передаваться из бд. enemy_units -
+        # список id юнитов врага, который даётся на вход при начале абсолютно любого боя
+        for hero_unit in args:
+            pass
+        for enemy_unit in enemy_units:
+            pass
+
 
 if __name__ == '__main__':
     pygame.init()

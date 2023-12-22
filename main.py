@@ -1,5 +1,5 @@
 import pygame
-from random import randint
+from map.Map import mapp
 
 from start_window.StartWindow import StartStateMenu
 
@@ -15,4 +15,3 @@ if __name__ == '__main__':
             elif event.type == pygame.MOUSEBUTTONDOWN:
 
     pygame.quit()
-            

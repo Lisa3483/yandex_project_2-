@@ -33,6 +33,52 @@ conn.commit()
 conn.close()
 conn = sqlite3.connect('../DataBase/game.db')
 cursor = conn.cursor()
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS enemy_units_in_battle (
+        number_of_battle INTEGER PRIMARY KEY AUTOINCREMENT,
+        enemy_unit_id_1,
+        enemy_unit_quantity_1,
+        enemy_unit_id_2,
+        enemy_unit_quantity_2,
+        enemy_unit_id_3,
+        enemy_unit_quantity_3,
+        enemy_unit_id_4,
+        enemy_unit_quantity_4,
+        enemy_unit_id_5,
+        enemy_unit_quantity_5
+    )
+''')
+cursor.execute('''
+        INSERT INTO units (enemy_unit_id_1,
+        enemy_unit_quantity_1,
+        enemy_unit_id_2,
+        enemy_unit_quantity_2,
+        enemy_unit_id_3,
+        enemy_unit_quantity_3,
+        enemy_unit_id_4,
+        enemy_unit_quantity_4,
+        enemy_unit_id_5,
+        enemy_unit_quantity_5)
+        VALUES (2, 100, 4, 20, 5, 8, 7, 7, 8, 44)
+    ''')
+cursor.execute('''
+        INSERT INTO units (enemy_unit_id_1,
+        enemy_unit_quantity_1,
+        enemy_unit_id_2,
+        enemy_unit_quantity_2,
+        enemy_unit_id_3,
+        enemy_unit_quantity_3,
+        enemy_unit_id_4,
+        enemy_unit_quantity_4,
+        enemy_unit_id_5,
+        enemy_unit_quantity_5)
+        VALUES (2, 100, 4, 20, 5, 8, 7, 7, 8, 43)
+    ''')
+conn.commit()
+conn.close()
+
+conn = sqlite3.connect('../DataBase/game.db')
+cursor = conn.cursor()
 
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS units (

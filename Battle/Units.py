@@ -67,15 +67,6 @@ class Unit:
         self.total_damage *= (1 + (self.unit_attack - self.unit_defence) * 0.05)
         return self.total_damage
 
-    def move(self):
-        pass
-
-    def may_strike(self):
-        if self.damage:
-            return True
-        else:
-            return None
-
 
 def get_second_element(tuplle):
     return tuplle[1]

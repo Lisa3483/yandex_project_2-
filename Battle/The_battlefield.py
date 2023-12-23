@@ -15,8 +15,9 @@ class Thebattlefield:
         self.cell_size = 0
         self.battle_is_running = False
         self.quality = 0
-        self.units_ids_on_board = []
+        self.units_qualitys = []
         self.board = [[0] * width for _ in range(height)]
+        self.get_total_damage = Unit.get_total_damage
 
     # настройка внешнего вида
     def set_view(self, left, top, cell_size):
@@ -57,8 +58,7 @@ class Thebattlefield:
         rows = cursor.fetchall()
         # Закрываем соединение с базой данных
         conn.close()
-        for row in rows:
-            self.units_ids_on_board.append(row[0])
+        self.units_qualitys = [row[j] for row in rows for j in range(len(rows))]
         for x in range(self.width):
             for y in range(self.height):
                 if (x, y) == (0, 0) and rows[0]:
@@ -71,20 +71,33 @@ class Thebattlefield:
                     self.board[y][x] = rows[3][1]
                 if (x, y) == (0, 0) and rows[4]:
                     self.board[y][x] = rows[4][1]
+        # не забыть сделать то-же самое с юнитами-врагами
 
     def end_battle(self):
         self.battle_is_running = False
+        conn = sqlite3.connect('../DataBase/game.db')
+        cursor = conn.cursor()
+        for i in self.units_qualitys:
+            cursor.execute(f'''
+            INSERT INTO units_in_inventory (quantity)
+            VALUES ('{i}')
+            ''')
+        # Закрываем соединение с базой данных
+        conn.close()
+        # значения таблицы quality меняются на те, что были получены в результате боя
 
     def move(self):
+        # юнит перемещается на клетку, где был произведён клик мышью
         pass
 
-    def may_attack(self):
+    def may_attack(self, x_pos, y_pos):
         for y in range(self.height):
             for x in range(self.width):
                 pass
+            # при нажатии левой кнопки мыши, проверяет есть-ли вражеский юнит на данной позиции
 
     def attack(self):
-        return Unit.get_total_damage(1, 1)
+        return self.get_total_damage(1, 2)
 
     def units_on_board(self, *args, enemy_units):
         # args - id юнитов в инвинтаре игрока, звыисит от того, как они будут передаваться из бд. enemy_units -

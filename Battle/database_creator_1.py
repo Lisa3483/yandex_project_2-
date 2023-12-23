@@ -10,23 +10,23 @@ cursor.execute('''
     )
 ''')
 cursor.execute('''
-        INSERT INTO units (unit_id, quantity)
+        INSERT INTO units_in_inventory (unit_id, quantity)
         VALUES (1, 100)
     ''')
 cursor.execute('''
-        INSERT INTO units (unit_id, quantity)
+        INSERT INTO units_in_inventory (unit_id, quantity)
         VALUES (2, 100)
     ''')
 cursor.execute('''
-        INSERT INTO units (unit_id, quantity)
+        INSERT INTO units_in_inventory (unit_id, quantity)
         VALUES (3, 100)
     ''')
 cursor.execute('''
-        INSERT INTO units (unit_id, quantity)
+        INSERT INTO units_in_inventory (unit_id, quantity)
         VALUES (4, 100)
     ''')
 cursor.execute('''
-        INSERT INTO units (unit_id, quantity)
+        INSERT INTO units_in_inventory (unit_id, quantity)
         VALUES (5, 100)
     ''')
 conn.commit()

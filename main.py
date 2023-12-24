@@ -1,5 +1,5 @@
 import pygame
-from map.Map import mapp
+# from map.Map import mapp
 
 from start_window.StartWindow import StartStateMenu, Buttons
 

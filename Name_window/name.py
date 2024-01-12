@@ -12,7 +12,6 @@ class Name:
         self.flag = 5
         self.x, self.y = 800, 600
         self.screen = screen
-        self.running = True
         self.rec = pygame.Rect(self.x / 3, 2 * (self.y / 3) - 50, self.x / 3, 50)
 
     def names(self):

@@ -69,7 +69,6 @@ class Buttons:
     def click_buttons(self, mouse_x, mouse_y):
         if 250 <= mouse_x <= 550:
             if 220 <= mouse_y <= 270:
-                color = 'white'
                 self.flag = 6
 
             elif 290 <= mouse_y <= 340:
@@ -82,7 +81,6 @@ class Buttons:
                 self.flag = 4
 
             elif 160 <= mouse_y <= 210:
-
                 self.flag = 5
 
     def flagss(self):

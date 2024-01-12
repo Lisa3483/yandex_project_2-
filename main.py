@@ -6,8 +6,9 @@ from Statistic.stats_window import Statistics
 from Name_window.name import Name
 from Save.save_game import SaveGame
 from Save.load_game import Saves
+from End_windows.death_window import Death
 
-flag, f = 1, 0
+flag = 8
 
 
 class Main:
@@ -18,7 +19,7 @@ class Main:
         self.name = ''
         pygame.display.set_caption('The little world')
         running = True
-        self.fc = StartStateMenu(self.screen)
+        self.fc = Death(self.screen)
         self.f = True
         self.r = 0
 
@@ -57,6 +58,9 @@ class Main:
 
         elif flag == 2:
             self.fc = Saves(self.screen)
+
+        elif flag == 8:
+            self.fc = Death(self.screen)
 
 if __name__ == '__main__':
     pygame.init()

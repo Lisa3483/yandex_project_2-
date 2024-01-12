@@ -2,14 +2,12 @@ import pygame
 import sqlite3
 
 
-
 class Statistics:
     def __init__(self, screen):
         self.x, self.y = 800, 600
         self.screen = screen
         self.running = True
         self.flag = 3
-
 
     def all_events(self):
         for event in pygame.event.get():
@@ -57,6 +55,10 @@ class Statistics:
         cur = con.cursor()
         result = cur.execute("SELECT * FROM stats").fetchall()
         c = 0
+        if len(result) == 0:
+            font = pygame.font.Font(None, 38)
+            text = font.render('Тут пока ничего нет', True, (255, 255, 255))
+            self.screen.blit(text, (200, self.y // 2))
 
         for i in result[:8]:
             n = 0

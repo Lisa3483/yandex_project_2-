@@ -51,8 +51,8 @@ class SaveGame:
                 res1 = (i + 1, self.name)
                 cur.execute(res, res1)
                 con.commit()
-                cur.close()
                 self.okno()
+        con.close()
 
     def baza(self):
         con = sqlite3.connect('DataBase/stat.db')

@@ -3,9 +3,10 @@ import sqlite3
 
 
 class Statistics:
-    def __init__(self, screen):
+    def __init__(self, screen, menu):
         self.x, self.y = 800, 600
         self.screen = screen
+        self.menu = menu
         self.running = True
         self.flag = 3
 
@@ -23,7 +24,7 @@ class Statistics:
         image = pygame.image.load('images/sstone.jpeg').convert_alpha()
         new_image = pygame.transform.scale(image, (self.x, self.y))
         self.screen.blit(new_image, (0, 0))
-        stats = ['Общее время', 'Смерти', 'Сыграно', 'Выиграно', 'Убито']
+        stats = ['Смерти', 'Убито', 'Время', 'Выиграно', 'Сыграно']
         pygame.draw.rect(self.screen, (153, 102, 5), (5, self.y - 65, 110, 40), 0)
         font = pygame.font.Font(None, 28)
         text = font.render('В меню', True, (255, 255, 255))
@@ -48,7 +49,10 @@ class Statistics:
         self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
         if 5 < self.mouse_x < 115 and self.y - 65 < self.mouse_y < self.y - 15:
             self.running = False
-            self.flag = 1
+            if self.menu == 'start':
+                self.flag = 1
+            else:
+                self.flag = 9
 
     def baza(self):
         con = sqlite3.connect('DataBase/stat.db')
@@ -76,7 +80,8 @@ class Statistics:
                 pygame.draw.line(self.screen, (153, 102, 5), (((self.x - 60) // 5) * n + 55, 5),
                                  (((self.x - 60) // 5) * n + 55, 110 + c), 5)
                 n += 1
-            pygame.draw.line(self.screen, (153, 102, 5), (self.x - 5, 5), (self.x - 5, 110 + c), 5)
+            pygame.draw.line(self.screen, (153, 102, 5), (self.x - 5, 5), (self.x - 5, 110 + c),
+                             5)
             c += 55
             pygame.draw.line(self.screen, (153, 102, 5), (5, (55 + c)), ((self.x - 5), (55 + c)),
                          5)

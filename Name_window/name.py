@@ -81,9 +81,11 @@ class Name:
         return self.flag
 
     def baza(self):
+        global text
         con = sqlite3.connect('DataBase/stat.db')
         cur = con.cursor()
         result = cur.execute("SELECT * FROM save_game").fetchall()
+        self.id = result[0] + 1
         font = pygame.font.Font(None, 32)
 
         c = 0
@@ -91,4 +93,12 @@ class Name:
             text = font.render(i[1], True, (255, 255, 255))
             self.screen.blit(text, (self.x // 4, 45 + 105 * c))
             c += 1
+        con.close()
 
+        con = sqlite3.connect('DataBase/stat.db')
+        cur = con.cursor()
+        res = """INSERT INTO stats (unic_number, deaths, kills, time, wins, battles) VALUES (?, 0, 0, 0, 0, 0);"""
+        res1 = (self.id,)
+        cur.execute(res, res1)
+        con.commit()
+        con.close()

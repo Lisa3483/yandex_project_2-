@@ -55,5 +55,5 @@ class Saves:
             text = font.render(i[1], True, (255, 255, 255))
             self.screen.blit(text, (self.x // 4, 45 + 130 * c))
             c += 1
-        cur.close()
+        con.close()
 

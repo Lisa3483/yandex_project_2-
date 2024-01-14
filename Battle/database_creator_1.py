@@ -49,7 +49,7 @@ cursor.execute('''
     )
 ''')
 cursor.execute('''
-        INSERT INTO units (enemy_unit_id_1,
+        INSERT INTO enemy_units_in_battle (enemy_unit_id_1,
         enemy_unit_quantity_1,
         enemy_unit_id_2,
         enemy_unit_quantity_2,
@@ -62,7 +62,7 @@ cursor.execute('''
         VALUES (2, 100, 4, 20, 5, 8, 7, 7, 8, 44)
     ''')
 cursor.execute('''
-        INSERT INTO units (enemy_unit_id_1,
+        INSERT INTO enemy_units_in_battle (enemy_unit_id_1,
         enemy_unit_quantity_1,
         enemy_unit_id_2,
         enemy_unit_quantity_2,
@@ -136,16 +136,3 @@ cursor.execute('''
 conn.commit()
 conn.close()
 
-conn = sqlite3.connect('../DataBase/game.db')
-cursor = conn.cursor()
-
-# Выполняем SQL-запрос и получаем все строки таблицы, то-есть проверяем содержимое
-cursor.execute('SELECT * FROM units')
-rows = cursor.fetchall()
-
-# Выводим содержимое таблицы
-for row in rows:
-    print(row)
-
-# Закрываем соединение с базой данных
-conn.close()

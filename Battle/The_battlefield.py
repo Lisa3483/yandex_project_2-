@@ -1,5 +1,7 @@
-import pygame
 import sqlite3
+
+import pygame
+
 from Units import Unit
 
 
@@ -44,6 +46,16 @@ class Thebattlefield:
             pygame.draw.rect(screen, pygame.Color(202, 196, 176),
                              (self.width * self.cell_size + (1 * self.left), 0, self.left,
                               self.height * self.cell_size + self.top * 2))
+            for x in range(self.width):
+                for y in range(self.height):
+                    if self.board[y][x]:
+                        print(y)
+                        pygame.draw.rect(screen, pygame.Color(100, 100, 100),
+                                         (self.cell_size * x + self.left + 5,
+                                          self.cell_size * y + self.top + 5,
+                                          self.cell_size * x + self.left,
+                                          self.cell_size * y + self.top - 10))
+                        break
             # отрисовка рамок для клеточного поля
         else:
             pass
@@ -58,20 +70,39 @@ class Thebattlefield:
         rows = cursor.fetchall()
         # Закрываем соединение с базой данных
         conn.close()
-        self.units_qualitys = [row[j] for row in rows for j in range(len(rows))]
+        self.units_qualitys = [row[1] for row in rows]
         for x in range(self.width):
             for y in range(self.height):
                 if (x, y) == (0, 0) and rows[0]:
                     self.board[y][x] = rows[0][1]
-                if (x, y) == (0, 0) and rows[1]:
+                if (x, y) == (0, 2) and rows[1]:
                     self.board[y][x] = rows[1][1]
-                if (x, y) == (0, 0) and rows[2]:
+                if (x, y) == (0, 4) and rows[2]:
                     self.board[y][x] = rows[2][1]
-                if (x, y) == (0, 0) and rows[3]:
+                if (x, y) == (0, 6) and rows[3]:
                     self.board[y][x] = rows[3][1]
-                if (x, y) == (0, 0) and rows[4]:
+                if (x, y) == (0, 7) and rows[4]:
                     self.board[y][x] = rows[4][1]
         # не забыть сделать то-же самое с юнитами-врагами
+        conn = sqlite3.connect('../DataBase/game.db')
+
+        cursor = conn.cursor()
+        cursor.execute(f'''SELECT * FROM enemy_units_in_battle WHERE number_of_battle="{number_of_battle}"''')
+        rows = cursor.fetchall()
+        # Закрываем соединение с базой данных
+        conn.close()
+        for x in range(self.width):
+            for y in range(self.height):
+                if (x, y) == (0, 0) and rows[0][1]:
+                    self.board[y][x] = rows[0][1]
+                if (x, y) == (0, 2) and rows[0][3]:
+                    self.board[y][x] = rows[0][3]
+                if (x, y) == (0, 4) and rows[0][5]:
+                    self.board[y][x] = rows[0][5]
+                if (x, y) == (0, 6) and rows[0][7]:
+                    self.board[y][x] = rows[0][7]
+                if (x, y) == (0, 7) and rows[0][9]:
+                    self.board[y][x] = rows[0][9]
 
     def end_battle(self):
         self.battle_is_running = False
@@ -117,6 +148,7 @@ if __name__ == '__main__':
     fps = 60
     clock = pygame.time.Clock()
     board = Thebattlefield(16, 8)
+    board.start_battle(1)  # тут номер битвы, так думаю будет удобно и просто, просто пронумеровать все битвы
     board.set_view(80, 90, 90)
 
     while running:

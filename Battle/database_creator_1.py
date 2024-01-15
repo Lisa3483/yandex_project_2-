@@ -1,4 +1,5 @@
 import sqlite3
+
 conn = sqlite3.connect('../DataBase/game.db')
 cursor = conn.cursor()
 
@@ -30,8 +31,6 @@ cursor.execute('''
         VALUES (5, 100)
     ''')
 conn.commit()
-conn.close()
-conn = sqlite3.connect('../DataBase/game.db')
 cursor = conn.cursor()
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS enemy_units_in_battle (
@@ -59,7 +58,7 @@ cursor.execute('''
         enemy_unit_quantity_4,
         enemy_unit_id_5,
         enemy_unit_quantity_5)
-        VALUES (2, 100, 4, 20, 5, 8, 7, 7, 8, 44)
+        VALUES (6, 100, 7, 20, 8, 8, 9, 7, 10, 44)
     ''')
 cursor.execute('''
         INSERT INTO enemy_units_in_battle (enemy_unit_id_1,
@@ -72,7 +71,7 @@ cursor.execute('''
         enemy_unit_quantity_4,
         enemy_unit_id_5,
         enemy_unit_quantity_5)
-        VALUES (2, 100, 4, 20, 5, 8, 7, 7, 8, 43)
+        VALUES (6, 100, 7, 20, 8, 8, 9, 7, 10, 43)
     ''')
 conn.commit()
 conn.close()
@@ -135,4 +134,3 @@ cursor.execute('''
     ''')
 conn.commit()
 conn.close()
-

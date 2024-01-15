@@ -1,5 +1,5 @@
-import sqlite3
 import random
+import sqlite3
 
 
 class Unit:
@@ -28,11 +28,13 @@ class Unit:
         cursor.execute('SELECT id, unit_speed FROM units')
         rows = cursor.fetchall()
         conn.close()
-        rows_2 = sorted(rows, key=get_second_element)
+        rows_3 = sorted(rows, key=get_first_element)
+        rows_3 = rows_3[:10]
+        rows_2 = sorted(rows_3, key=get_second_element)
 
         # Выводим содержимое таблицы
         for row in rows_2:
-            self.the_sequence_of_the_move_list.append(row[0])
+            self.the_sequence_of_the_move_list.append(row)
 
         # Закрываем соединение с базой данных
         return self.the_sequence_of_the_move_list
@@ -70,3 +72,7 @@ class Unit:
 
 def get_second_element(tuplle):
     return tuplle[1]
+
+
+def get_first_element(tuplle):
+    return tuplle[0]

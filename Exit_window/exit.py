@@ -2,9 +2,11 @@ import pygame
 
 flag = 4
 
+
 class Exit:
-    def __init__(self, screen):
+    def __init__(self, screen, menu):
         self.screen = screen
+        self.menu = menu
         self.x, self.y = 800, 600
         self.flag = 4
 
@@ -35,8 +37,6 @@ class Exit:
         pygame.draw.rect(self.screen, (255, 255, 255), (158, 348, 204, 54), 2)
         pygame.draw.rect(self.screen, (255, 255, 255), (438, 348, 204, 54), 2)
 
-
-
         font = pygame.font.Font(None, 40)
 
         text = font.render("ДА", True, (255, 255, 255))
@@ -56,6 +56,9 @@ class Exit:
             exit()
 
         elif 440 <= self.mouse_x <= 640 and 350 <= self.mouse_y <= 400:
-            self.flag = 1
+            if self.menu == 'start':
+                self.flag = 1
+            else:
+                self.flag = 10
 
 

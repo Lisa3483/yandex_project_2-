@@ -1,5 +1,5 @@
-
 import pygame
+
 
 class Death:
     def __init__(self, screen):

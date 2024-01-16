@@ -1,29 +1,25 @@
 import pygame
 import sqlite3
-import shelve
 
-flag = 7
 
 class SaveGame:
-    def __init__(self, screen, name):
+    def __init__(self, screen, name, menu, unic_number):
         self.x, self.y = 800, 600
         self.name = name
+        self.menu = menu
+        self.unic_number = unic_number
+        self.flag = 7
         self.screen = screen
-
-        self.running = True
 
     def all_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_x, mouse_y = pygame.mouse.get_pos()
-                self.buttons(mouse_x, mouse_y)
+                self.buttons()
 
     def flagg(self):
-        global flag
-        return flag
-
+        return self.flag
 
     def okno(self):
         image = pygame.image.load('images/sstone.jpeg').convert_alpha()
@@ -41,20 +37,45 @@ class SaveGame:
         self.baza()
         pygame.display.flip()
 
-    def buttons(self, mouse_x, mouse_y):
+    def buttons(self):
+        self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
+        if 5 < self.mouse_x < 115 and self.y - 65 < self.mouse_y < self.y - 15:
+            if self.menu == 'start':
+                self.flag = 1
+            else:
+                self.flag = 10
+
         con = sqlite3.connect('DataBase/stat.db')
         cur = con.cursor()
 
         for i in range(4):
-            if 5 + i * 130 < mouse_y < 130 + i * 130 and 5 < mouse_x < self.x - 5:
-                res = """INSERT INTO save_game (id, name) VALUES (?, ?);"""
-                res1 = (i + 1, self.name)
-                cur.execute(res, res1)
-                con.commit()
-                self.okno()
+            if 5 + i * 130 < self.mouse_y < 130 + i * 130 and 5 < self.mouse_x < self.x - 5:
+                if self.unic_number == 0:
+                    con = sqlite3.connect('DataBase/stat.db')
+                    cur = con.cursor()
+                    result = cur.execute("""SELECT * FROM stats""").fetchall()[0]
+                    self.id = result[0] + 1
+                    res = """INSERT INTO stats (unic_number, deaths, kills, time, wins, battles) 
+                    VALUES (?, 0, 0, 0, 0, 0);"""
+                    res1 = (self.id,)
+                    cur.execute(res, res1)
+                    con.commit()
+                    res2 = """INSERT INTO save_game (unic_number, name, id) VALUES (?, ?, ?)"""
+                    res1 = (self.id, self.name, i + 1)
+                    cur.execute(res2, res1)
+                    con.commit()
+                    con.close()
+                else:
+
+                    res = """INSERT INTO save_game (unic_number, name, id) VALUES (?, ?, ?);"""
+                    res1 = (self.unic_number, self.name, i + 1)
+                    cur.execute(res, res1)
+                    con.commit()
+                    self.okno()
         con.close()
 
     def baza(self):
+
         con = sqlite3.connect('DataBase/stat.db')
         cur = con.cursor()
         result = cur.execute("SELECT * FROM save_game").fetchall()

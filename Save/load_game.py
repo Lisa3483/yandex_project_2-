@@ -3,23 +3,22 @@ import sqlite3
 
 
 class Saves:
-    def __init__(self, screen):
+    def __init__(self, screen, menu):
         pygame.init()
         self.screen = screen
         self.x, self.y = 800, 600
-
-        self.running = True
+        self.flag = 2
+        self.menu = menu
 
     def flagg(self):
         return self.flag
 
     def all_events(self):
-        while self.running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    self.buttons()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                self.buttons()
 
     def okno(self):
         image = pygame.image.load('images/sstone.jpeg').convert_alpha()
@@ -41,14 +40,18 @@ class Saves:
     def buttons(self):
         self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
         if 5 < self.mouse_x < 115 and self.y - 65 < self.mouse_y < self.y - 15:
-            self.running = False
-            self.flag = 1
+            if self.menu == 'start':
+                self.flag = 1
+            else:
+                self.flag = 10
 
     def baza(self):
         con = sqlite3.connect('DataBase/stat.db')
         cur = con.cursor()
         result = cur.execute("SELECT * FROM save_game").fetchall()
         font = pygame.font.Font(None, 32)
+
+        result.sort()
 
         c = 0
         for i in result:

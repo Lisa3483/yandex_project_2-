@@ -52,7 +52,7 @@ class Statistics:
             if self.menu == 'start':
                 self.flag = 1
             else:
-                self.flag = 9
+                self.flag = 10
 
     def baza(self):
         con = sqlite3.connect('DataBase/stat.db')

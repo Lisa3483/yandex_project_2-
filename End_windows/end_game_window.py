@@ -49,7 +49,7 @@ class EndGame:
         self.screen.blit(text, (self.x // 2 - w // 2, 450 + h // 2))
         con = sqlite3.connect('DataBase/stat.db')
         cur = con.cursor()
-        result = cur.execute("SELECT * FROM stats WHERE id = ?", (self.game,)).fetchall()
+        result = cur.execute("SELECT * FROM stats WHERE unic_number = ?", (self.game,)).fetchall()
         con.close()
         pygame.display.flip()
 

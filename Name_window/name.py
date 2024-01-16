@@ -6,6 +6,7 @@ active = False
 text = ''
 warning = ''
 
+
 class Name:
     def __init__(self, screen):
         self.font = pygame.font.Font(None, 32)
@@ -74,31 +75,10 @@ class Name:
             warning = 'Минимальное количество символов - 5'
 
         else:
-            self.running = False
             self.flag = 7
 
     def flagg(self):
         return self.flag
 
-    def baza(self):
-        global text
-        con = sqlite3.connect('DataBase/stat.db')
-        cur = con.cursor()
-        result = cur.execute("SELECT * FROM save_game").fetchall()
-        self.id = result[0] + 1
-        font = pygame.font.Font(None, 32)
 
-        c = 0
-        for i in result:
-            text = font.render(i[1], True, (255, 255, 255))
-            self.screen.blit(text, (self.x // 4, 45 + 105 * c))
-            c += 1
-        con.close()
 
-        con = sqlite3.connect('DataBase/stat.db')
-        cur = con.cursor()
-        res = """INSERT INTO stats (unic_number, deaths, kills, time, wins, battles) VALUES (?, 0, 0, 0, 0, 0);"""
-        res1 = (self.id,)
-        cur.execute(res, res1)
-        con.commit()
-        con.close()

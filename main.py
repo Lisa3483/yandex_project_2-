@@ -10,7 +10,7 @@ from End_windows.death_window import Death
 from End_windows.end_game_window import EndGame
 from Side_Menu.side_menu import SideMenu
 
-flag = 10
+flag = 1
 
 
 class Main:
@@ -21,10 +21,9 @@ class Main:
         self.name = ''
         pygame.display.set_caption('The little world')
         running = True
-        self.menu = 'side'
+        self.menu = 'start'
         self.game = 0
-        self.fc = SideMenu(self.screen)
-        self.f = True
+        self.fc = StartStateMenu(self.screen)
 
         while running:
             self.rer()
@@ -46,21 +45,21 @@ class Main:
         if flag == 1:
             self.fc = StartStateMenu(self.screen)
 
-        elif flag == 3:
+        if flag == 3:
             self.fc = Statistics(self.screen, self.menu)
 
         elif flag == 4:
-            self.fc = Exit(self.screen)
+            self.fc = Exit(self.screen, self.menu)
 
         elif flag == 5:
             self.fc = Name(self.screen)
             self.name = Name(self.screen).names()
 
         elif flag == 7:
-            self.fc = SaveGame(self.screen, self.name)
+            self.fc = SaveGame(self.screen, self.name, self.menu, self.game)
 
         elif flag == 2:
-            self.fc = Saves(self.screen)
+            self.fc = Saves(self.screen, self.menu)
 
         elif flag == 8:
             self.fc = Death(self.screen)

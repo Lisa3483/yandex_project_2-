@@ -49,7 +49,8 @@ class Thebattlefield:
             for x in range(self.width):
                 for y in range(self.height):
                     if self.board[y][x]:
-                        pygame.draw.rect(screen, pygame.Color(100, 100, 100),
+                        pygame.draw.rect(screen,
+                                         pygame.Color(100 - self.board[y][x] * 5, 100 + self.board[y][x] * 5, 100),
                                          (self.cell_size * x + self.left + 5,
                                           self.cell_size * y + self.top + 5,
                                           80,
@@ -102,7 +103,6 @@ class Thebattlefield:
                     self.board[y][x] = rows[0][7]
                 if (x, y) == (15, 7) and rows[0][9]:
                     self.board[y][x] = rows[0][9]
-                print(self.board[y][x])
         self.number_of_battle = number_of_battle
 
     def end_battle(self):
@@ -118,14 +118,23 @@ class Thebattlefield:
         conn.close()
         # значения таблицы quality меняются на те, что были получены в результате боя
 
-    def round_move(self):
+    def round_move(self, enemy_or_no):
         Un = Unit()
         lst = Un.the_sequence_of_the_move()
+        cast_point = 0
         if self.battle_is_running:
             for id in lst:
-                if int(id[0]) <= 5:
-                    pass
-                else:
+                if int(id[0]) <= 5 and not enemy_or_no:
+                    conn = sqlite3.connect('../DataBase/game.db')
+                    cursor = conn.cursor()
+                    cursor.execute(
+                        f'''SELECT * FROM units_in_inventory''')
+                    rows = cursor.fetchall()
+                    # Закрываем соединение с базой данных
+                    conn.close()
+                    if cast_point == 0:
+                        cast_point = 1
+                elif enemy_or_no:
                     conn = sqlite3.connect('../DataBase/game.db')
                     cursor = conn.cursor()
                     cursor.execute(
@@ -133,24 +142,44 @@ class Thebattlefield:
                     rows = cursor.fetchall()
                     # Закрываем соединение с базой данных
                     conn.close()
-                    for x in range(self.width):
-                        for y in range(self.height):
-                            if int(self.board[y][x]) == int(id[0]):
-                                conn = sqlite3.connect('../DataBase/game.db')
-                                cursor = conn.cursor()
-                                cursor.execute(
-                                    f'''SELECT unit_speed FROM units WHERE id="{self.board[y][x]}"''')
-                                rows = cursor.fetchall()
-                                # Закрываем соединение с базой данных
-                                conn.close()
-                                for i in range(1, int(rows[0][0]) + 1):
-                                    if self.board[y][x - i] == 0:
-                                        self.board[y][x - i] = self.board[y][x]
-                                        self.board[y][x] = 0
-                                    elif self.board[y][x - i + 1] == 0:
-                                        self.board[y][x - i + 1] = self.board[y][x]
-                                        self.board[y][x] = 0
-        # юнит перемещается на клетку, где был произведён клик мышью
+                    for x_0 in range(self.width):
+                        for y_0 in range(self.height):
+                            if int(self.board[y_0][x_0]) == int(id[0]):
+                                for x_1 in range(self.width):
+                                    for y_1 in range(self.height):
+                                        if int(self.board[y_1][x_1]) <= 5:
+                                            x_last = 0
+                                            y_last = 0
+                                            if x_0 > x_1 and y_0 > y_1:
+                                                x_last = x_0 - x_1 - 1
+                                                y_last = y_0 - y_1 + 1
+                                            elif x_0 < x_1 and y_0 > y_1:
+                                                x_last = x_1 - x_0 + 1
+                                                y_last = y_0 - y_1 + 1
+                                            elif x_0 < x_1 and y_0 < y_1:
+                                                x_last = x_1 - x_0 + 1
+                                                y_last = y_1 - y_0 - 1
+                                            elif x_0 > x_1 and y_0 < y_1:
+                                                x_last = x_0 - x_1 - 1
+                                                y_last = y_1 - y_0 - 1
+                                            if abs(x_last) + abs(y_last) <= int(id[1]):
+                                                self.board[y_1][x_1] = self.board[y_0][x_0]
+                                                self.board[y_0][x_0] = 0
+                                            else:
+                                                if int(id[1]) - abs(x_last):
+                                                    self.board[y_1][int(id[1]) - abs(x_last)] = self.board[y_0][x_0]
+                                                    self.board[y_0][x_0] = 0
+                                                elif int(id[1]) - abs(y_last):
+                                                    self.board[int(id[1]) - abs(y_last)][x_1] = self.board[y_0][x_0]
+                                                    self.board[y_0][x_0] = 0
+                                                elif not int(id[1]) - abs(x_last):
+                                                    self.board[y_0][x_last - int(id[1])] = self.board[y_0][x_0]
+                                                    self.board[y_0][x_0] = 0
+                                                elif not int(id[1]) - abs(y_last):
+                                                    self.board[y_last - int(id[1])][x_last] = self.board[y_0][x_0]
+                                                    self.board[y_0][x_0] = 0
+                                            break
+                                        break
 
     def the_sqarense_track(self):
         pass
@@ -175,6 +204,7 @@ class Thebattlefield:
             pass
         for enemy_unit in enemy_units:
             pass
+        # вроде как-то бесполезно получилось, нигде не используется
 
 
 if __name__ == '__main__':
@@ -193,8 +223,13 @@ if __name__ == '__main__':
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    board.round_move(1)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_2:
+                    board.round_move(0)
         screen.fill((0, 0, 0))
-        board.round_move()
         board.render(screen)
         pygame.display.flip()
         clock.tick(fps)

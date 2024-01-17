@@ -9,6 +9,7 @@ from Save.load_game import Saves
 from End_windows.death_window import Death
 from End_windows.end_game_window import EndGame
 from Side_Menu.side_menu import SideMenu
+from Music.Menu_music import Music
 
 flag = 1
 
@@ -16,7 +17,7 @@ flag = 1
 class Main:
     def __init__(self, screen):
         global flag
-
+        Music()
         self.screen = screen
         self.name = ''
         pygame.display.set_caption('The little world')

@@ -1,13 +1,8 @@
 class Spell_book:
     def __init__(self):
-        pass
+        self.damage = 0
+    def bolt(self, number_of_battle):
+        self.damage = number_of_battle * 10 + 35
+    def boom(self, number_of_battle):
+        self.damage = 80
 
-    def spell(self, number_of_spell):
-        pass
-
-    def spell_upgrade(self, number_of_battle):
-        pass
-
-    def cast(self, cast_point):
-        if not cast_point:
-            pass

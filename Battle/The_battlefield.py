@@ -20,6 +20,7 @@ class Thebattlefield:
         self.units_qualitys = []
         self.board = [[0] * width for _ in range(height)]
         self.number_of_battle = 0
+        self.lst = []
 
     # настройка внешнего вида
     def set_view(self, left, top, cell_size):
@@ -50,7 +51,7 @@ class Thebattlefield:
                 for y in range(self.height):
                     if self.board[y][x]:
                         pygame.draw.rect(screen,
-                                         pygame.Color(100 - self.board[y][x] * 5, 100 + self.board[y][x] * 5, 100),
+                                         pygame.Color(100 - self.board[y][x] * 10, 100 + self.board[y][x] * 10, 100),
                                          (self.cell_size * x + self.left + 5,
                                           self.cell_size * y + self.top + 5,
                                           80,
@@ -64,6 +65,8 @@ class Thebattlefield:
 
     def start_battle(self, number_of_battle):
         self.battle_is_running = True
+        un = Unit()
+        self.lst = un.the_sequence_of_the_move()
         conn = sqlite3.connect('../DataBase/game.db')
 
         cursor = conn.cursor()
@@ -118,13 +121,13 @@ class Thebattlefield:
         conn.close()
         # значения таблицы quality меняются на те, что были получены в результате боя
 
-    def round_move(self, enemy_or_no):
-        Un = Unit()
-        lst = Un.the_sequence_of_the_move()
+    def round_move_invent(self):
+        fl = False
         cast_point = 0
+        un = Unit()
         if self.battle_is_running:
-            for id in lst:
-                if int(id[0]) <= 5 and not enemy_or_no:
+            for id in self.lst:
+                if int(id[0]) <= 5:
                     conn = sqlite3.connect('../DataBase/game.db')
                     cursor = conn.cursor()
                     cursor.execute(
@@ -134,7 +137,54 @@ class Thebattlefield:
                     conn.close()
                     if cast_point == 0:
                         cast_point = 1
-                elif enemy_or_no:
+
+                    for x_0 in range(self.width):
+                        for y_0 in range(self.height):
+                            if int(self.board[y_0][x_0]) == int(id[0]):
+                                fl = False
+                                while True:
+                                    if not fl:
+                                        for e in pygame.event.get():
+                                            if e.type == pygame.MOUSEBUTTONDOWN and e.button == 1:
+                                                print(pygame.mouse.get_pos())
+                                                x_1, y_1 = (pygame.mouse.get_pos()[0] - self.left) // self.cell_size, (
+                                                        pygame.mouse.get_pos()[1] - self.top) // self.cell_size
+                                                if self.board[y_1][x_1] == 0:
+                                                    self.board[y_1][x_1] = int(id[0])
+                                                    self.board[y_0][x_0] = 0
+                                                if self.board[y_1][x_1] > 5:
+                                                    conn = sqlite3.connect('../DataBase/game.db')
+                                                    cursor = conn.cursor()
+                                                    cursor.execute(
+                                                        f"SELECT unit_hp FROM units WHERE id = '{self.board[y_1][x_1]}'")
+                                                    fetch = cursor.fetchall()
+                                                    conn.close()
+                                                    hp = int(fetch[0][0]) * int(
+                                                        self.lst[self.board[y_1][x_1]][1])
+                                                    hp = hp - int(
+                                                        un.get_total_damage(self.board[y_0][x_0], self.board[y_1][x_1]))
+                                                    if hp // int(fetch[0][0]):
+                                                        self.units_qualitys[self.board[y_1][x_1]] = hp // int(
+                                                            fetch[0][0])
+                                                        self.lst[self.board[y_1][x_1] - 1] = \
+                                                        self.lst[self.board[y_1][x_1] - 1][0], self.units_qualitys[
+                                                            self.board[y_1][x_1]]
+                                                    else:
+                                                        self.board[y_1][x_1] = 0
+                                                fl = True
+                                    if fl:
+                                        break
+                            break
+                        break
+
+    def round_move_enemy(self):
+        Un = Unit()
+        lst = Un.the_sequence_of_the_move()
+        if self.battle_is_running:
+            for id in lst:
+                if int(id[0]) <= 5:
+                    pass
+                else:
                     conn = sqlite3.connect('../DataBase/game.db')
                     cursor = conn.cursor()
                     cursor.execute(
@@ -166,36 +216,32 @@ class Thebattlefield:
                                                 self.board[y_1][x_1] = self.board[y_0][x_0]
                                                 self.board[y_0][x_0] = 0
                                             else:
-                                                if int(id[1]) - abs(x_last):
+                                                if int(id[1]) - abs(x_last) and self.board[y_1][
+                                                    int(id[1]) - abs(x_last)] == 0:
                                                     self.board[y_1][int(id[1]) - abs(x_last)] = self.board[y_0][x_0]
                                                     self.board[y_0][x_0] = 0
-                                                elif int(id[1]) - abs(y_last):
+                                                elif int(id[1]) - abs(y_last) and self.board[int(id[1]) - abs(y_last)][
+                                                    x_1] == 0:
                                                     self.board[int(id[1]) - abs(y_last)][x_1] = self.board[y_0][x_0]
                                                     self.board[y_0][x_0] = 0
-                                                elif not int(id[1]) - abs(x_last):
+                                                elif not int(id[1]) - abs(x_last) and self.board[y_0][
+                                                    x_last - int(id[1])] == 0:
                                                     self.board[y_0][x_last - int(id[1])] = self.board[y_0][x_0]
                                                     self.board[y_0][x_0] = 0
-                                                elif not int(id[1]) - abs(y_last):
+                                                elif not int(id[1]) - abs(y_last) and self.board[y_last - int(id[1])][
+                                                    x_last] == 0:
                                                     self.board[y_last - int(id[1])][x_last] = self.board[y_0][x_0]
                                                     self.board[y_0][x_0] = 0
                                             break
                                         break
+                continue
 
     def the_sqarense_track(self):
-        pass
-
-    def may_attack(self, x_pos, y_pos, id_of_attack, id_of_def):
-        if self.battle_is_running:
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    for y in range(self.height):
-                        for x in range(self.width):
-                            pass
-                # при нажатии левой кнопки мыши, проверяет есть-ли вражеский юнит на данной позиции
-
-    def attack(self):
         Un = Unit()
-        return Un.get_total_damage(1, 2)
+        lst = Un.the_sequence_of_the_move()
+        for id in lst:
+            if int(id[0]) <= 5:
+                pass
 
     def units_on_board(self, *args, enemy_units):
         # args - id юнитов в инвинтаре игрока, звыисит от того, как они будут передаваться из бд. enemy_units -
@@ -216,7 +262,7 @@ if __name__ == '__main__':
     fps = 60
     clock = pygame.time.Clock()
     board = Thebattlefield(16, 8)
-    board.start_battle(5)  # тут номер битвы, так думаю будет удобно и просто, просто пронумеровать все битвы
+    board.start_battle(1)  # тут номер битвы, так думаю будет удобно и просто, просто пронумеровать все битвы
     board.set_view(80, 90, 90)
 
     while running:
@@ -225,10 +271,10 @@ if __name__ == '__main__':
                 running = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_1:
-                    board.round_move(1)
+                    board.round_move_invent()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_2:
-                    board.round_move(0)
+                    board.round_move_enemy()
         screen.fill((0, 0, 0))
         board.render(screen)
         pygame.display.flip()

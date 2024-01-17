@@ -48,12 +48,11 @@ class Unit:
         cursor = conn.cursor()
 
         cursor.execute(
-            f"SELECT quantity, unit_min_damage, unit_max_damage, unit_attack FROM units WHERE id = '{number}'")
+            f"SELECT unit_min_damage, unit_max_damage, unit_attack FROM units WHERE id = '{number}'")
         fetch = cursor.fetchall()
-        self.unit_quantity = fetch[0][0]
-        self.unit_min_damage = fetch[0][1]
-        self.unit_max_damage = fetch[0][2]
-        self.unit_attack = fetch[0][3]
+        self.unit_min_damage = fetch[0][0]
+        self.unit_max_damage = fetch[0][1]
+        self.unit_attack = fetch[0][2]
         conn.close()
 
         conn = sqlite3.connect('../DataBase/game.db')
@@ -64,6 +63,13 @@ class Unit:
         fetch = cursor.fetchall()
         self.unit_defence = fetch[0][0]
         conn.close()
+        conn = sqlite3.connect('../DataBase/game.db')
+        cursor = conn.cursor()
+
+        cursor.execute(
+            f"SELECT quantity FROM units_in_inventory WHERE inventory_cell_id = '{number}'")
+        fetch = cursor.fetchall()
+        self.unit_quantity = fetch[0][0]
         for one_unit_damage in range(int(self.unit_quantity)):
             self.total_damage += random.randint(self.unit_min_damage, self.unit_max_damage)
         self.total_damage *= (1 + (self.unit_attack - self.unit_defence) * 0.05)

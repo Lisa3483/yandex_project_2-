@@ -88,49 +88,60 @@ cursor.execute('''
         unit_attack INTEGER,
         unit_defence INTEGER,
         the_ability INTEGER,
-        quantity INTEGER
+        quantity INTEGER,
+        unit_hp INTEGER
     )
 ''')
 creature_list = [['0 - ', ]]
 cursor.execute('''
-        INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability, quantity)
-        VALUES (1, 3, 3, 3, 3, 1, 0)
+        INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability,
+         quantity, unit_hp)
+        VALUES (1, 3, 3, 3, 3, 1, 0, 4)
     ''')
 cursor.execute('''
-        INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability, quantity)
-        VALUES (3, 6, 3, 5, 3, 2, 0)
+        INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability,
+         quantity, unit_hp)
+        VALUES (3, 6, 3, 5, 3, 2, 0, 7)
     ''')
 cursor.execute('''
-        INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability, quantity)
-        VALUES (9, 12, 5, 7, 4, 3, 0)
+        INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability,
+         quantity, unit_hp)
+        VALUES (9, 12, 5, 7, 4, 3, 0, 12)
     ''')
 cursor.execute('''
-        INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability, quantity)
-        VALUES (12, 13, 6, 10, 7, 2, 0)
+        INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability,
+         quantity, unit_hp)
+        VALUES (12, 13, 6, 10, 7, 2, 0, 30)
     ''')
 cursor.execute('''
-        INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability, quantity)
-        VALUES (20, 30, 9, 14, 12, 1, 0)
+        INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability,
+         quantity, unit_hp)
+        VALUES (20, 30, 9, 14, 12, 1, 0, 120)
     ''')
 cursor.execute('''
-        INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability, quantity)
-        VALUES (1, 2, 3, 8, 0, 1, 0)
+        INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability,
+         quantity, unit_hp)
+        VALUES (1, 2, 3, 8, 0, 1, 0, 4)
     ''')
 cursor.execute('''
-        INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability, quantity)
-        VALUES (3, 5, 5, 2, 9, 3, 0)
+        INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability,
+         quantity, unit_hp)
+        VALUES (3, 5, 5, 2, 9, 3, 0, 8)
     ''')
 cursor.execute('''
-        INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability, quantity)
-        VALUES (7, 9, 8, 9, 7, 3, 0)
+        INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability,
+         quantity, unit_hp)
+        VALUES (7, 9, 8, 9, 7, 3, 0, 9)
     ''')
 cursor.execute('''
-        INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability, quantity)
-        VALUES (11, 15, 4, 14, 5, 2, 0)
+        INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability,
+         quantity, unit_hp)
+        VALUES (11, 15, 4, 14, 5, 2, 0, 33)
     ''')
 cursor.execute('''
-        INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability, quantity)
-        VALUES (15, 22, 9, 15, 9, 3, 0)
+        INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability,
+         quantity, unit_hp)
+        VALUES (15, 22, 9, 15, 9, 3, 0, 100)
     ''')
 conn.commit()
 conn.close()

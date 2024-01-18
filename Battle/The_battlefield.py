@@ -1,4 +1,6 @@
+import os
 import sqlite3
+import sys
 
 import pygame
 
@@ -21,6 +23,26 @@ class Thebattlefield:
         self.board = [[0] * width for _ in range(height)]
         self.number_of_battle = 0
         self.lst = []
+        # self.image = Image1.image
+        # self.rect = self.image.get_rect()
+        # self.rect.x = 0
+        # self.rect.y = 0
+
+    def load_image(self, name, colorkey=None):
+        fullname = os.path.join('sprites', name)
+        # если файл не существует, то выходим
+        if not os.path.isfile(fullname):
+            print(f"Файл с изображением '{fullname}' не найден")
+            sys.exit()
+        image = pygame.image.load(fullname)
+        if colorkey is not None:
+            image = image.convert()
+            if colorkey == -1:
+                colorkey = image.get_at((0, 0))
+            image.set_colorkey(colorkey)
+        else:
+            pass
+        return image
 
     # настройка внешнего вида
     def set_view(self, left, top, cell_size):
@@ -50,6 +72,12 @@ class Thebattlefield:
             for x in range(self.width):
                 for y in range(self.height):
                     if self.board[y][x]:
+                        # im = Image1()
+                        # image = im.image
+                        # self.rect = image.get_rect()
+                        # self.rect.x = self.cell_size * x + self.left + 5
+                        # self.rect.y = self.cell_size * y + self.top + 5
+                        # sprites.draw(screen, self.rect.x, self.rect.y)
                         pygame.draw.rect(screen,
                                          pygame.Color(100 - self.board[y][x] * 10, 100 + self.board[y][x] * 10, 100),
                                          (self.cell_size * x + self.left + 5,
@@ -167,8 +195,8 @@ class Thebattlefield:
                                                         self.units_qualitys[self.board[y_1][x_1]] = hp // int(
                                                             fetch[0][0])
                                                         self.lst[self.board[y_1][x_1] - 1] = \
-                                                        self.lst[self.board[y_1][x_1] - 1][0], self.units_qualitys[
-                                                            self.board[y_1][x_1]]
+                                                            self.lst[self.board[y_1][x_1] - 1][0], self.units_qualitys[
+                                                                self.board[y_1][x_1]]
                                                     else:
                                                         self.board[y_1][x_1] = 0
                                                 fl = True
@@ -178,8 +206,8 @@ class Thebattlefield:
                         break
 
     def round_move_enemy(self):
-        Un = Unit()
-        lst = Un.the_sequence_of_the_move()
+        un = Unit()
+        lst = un.the_sequence_of_the_move()
         if self.battle_is_running:
             for id in lst:
                 if int(id[0]) <= 5:
@@ -237,8 +265,8 @@ class Thebattlefield:
                 continue
 
     def the_sqarense_track(self):
-        Un = Unit()
-        lst = Un.the_sequence_of_the_move()
+        un = Unit()
+        lst = un.the_sequence_of_the_move()
         for id in lst:
             if int(id[0]) <= 5:
                 pass
@@ -253,9 +281,28 @@ class Thebattlefield:
         # вроде как-то бесполезно получилось, нигде не используется
 
 
+class Image1(pygame.sprite.Sprite):
+    bfelld = Thebattlefield(8, 16)
+    image = bfelld.load_image("1705599505984pe8jdtcn.png")
+
+    def __init__(self, *group):
+        super().__init__(*group)
+        self.image = Image1.image
+        self.rect = self.image.get_rect()
+        self.rect.x = 0
+        self.rect.y = 0
+
+    def update(self):
+        pass
+
+
 if __name__ == '__main__':
     pygame.init()
     pygame.display.set_caption('Сражение')
+    im = Image1()
+    sprites = pygame.sprite.Group()
+    sprites.add(im)
+
     size = width, height = 1600, 900
     screen = pygame.display.set_mode(size)
     running = True

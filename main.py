@@ -10,6 +10,7 @@ from End_windows.death_window import Death
 from End_windows.end_game_window import EndGame
 from Side_Menu.side_menu import SideMenu
 from Music.Menu_music import Music
+from map.game import Game
 
 flag = 1
 
@@ -57,7 +58,7 @@ class Main:
             self.name = Name(self.screen).names()
 
         elif flag == 7:
-            self.fc = SaveGame(self.screen, self.name, self.menu, self.game)
+            self.fc = Game()
 
         elif flag == 2:
             self.fc = Saves(self.screen, self.menu)
@@ -70,9 +71,6 @@ class Main:
 
         elif flag == 10:
             self.fc = SideMenu(self.screen)
-
-        elif flag == 12:
-            pass
 
 
 if __name__ == '__main__':

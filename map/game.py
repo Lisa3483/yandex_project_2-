@@ -1,8 +1,9 @@
 import pygame
+import sys
 from pygame.locals import *
 from pygame import Color
 #  from map import Map    
-from map import Map
+from map.Map import Map
 
 GAME_ABOUT = """about:
     -using tileset and numpy 2D array for map data.
@@ -21,14 +22,14 @@ GAME_HOTKEYS = """== Hotkeys! ===
 """
 
 
-class Game():
+class Game:
     """game Main entry point. handles intialization of game and graphics.    
     members:
         map : map.Map() instance
     """
     done = False
 
-    def __init__(self, width=640, height=480):
+    def __init__(self, width=700, height=500):
         """Initialize PyGame"""
         pygame.init()
         self.width, self.height = width, height
@@ -43,6 +44,8 @@ class Game():
         print(GAME_TITLE)
         print(GAME_ABOUT)
         print(GAME_HOTKEYS)
+
+        self.main_loop()
 
     def main_loop(self):
         while not self.done:
@@ -163,11 +166,11 @@ class Game():
 
     def draw_hero(self):
 
-        self.player_stand = pygame.image.load('hero_image//Hero_forward2.png')
-        self.player_right = [pygame.image.load(f'hero_image//Hero_right{i}.png') for i in range(1, 4)]
-        self.player_left = [pygame.image.load(f'hero_image//Hero_left{i}.png') for i in range(1, 4)]
-        self.player_up = [pygame.image.load(f'hero_image//Hero_top{i}.png') for i in range(1, 4)]
-        self.player_down = [pygame.image.load(f'hero_image//Hero_forward{i}.png') for i in range(1, 4)]
+        self.player_stand = pygame.image.load('map//hero_image//Hero_forward2.png')
+        self.player_right = [pygame.image.load(f'map//hero_image//Hero_right{i}.png') for i in range(1, 4)]
+        self.player_left = [pygame.image.load(f'map//hero_image//Hero_left{i}.png') for i in range(1, 4)]
+        self.player_up = [pygame.image.load(f'map//hero_image//Hero_top{i}.png') for i in range(1, 4)]
+        self.player_down = [pygame.image.load(f'map//hero_image//Hero_forward{i}.png') for i in range(1, 4)]
 
         self.clock = pygame.time.Clock()
 
@@ -225,3 +228,25 @@ class Game():
         self.screen.fill(Color("black"))
         self.map.draw()
         pygame.display.flip()
+    def okno(self):
+        global warning
+        global color, text
+        image = pygame.image.load('images/sstone.jpeg').convert_alpha()
+        new_image = pygame.transform.scale(image, (self.x, self.y))
+        self.screen.blit(new_image, (0, 0))
+        font = pygame.font.Font(None, 33)
+        text_1 = font.render('Введите имя вашего персонажа', True, (255, 255, 255))
+        self.screen.blit(text_1, (220, 200))
+        pygame.draw.rect(self.screen, (153, 102, 5),
+                         (self.x / 4, self.y / 4, self.x // 2, self.y // 2), 5)
+        pygame.draw.rect(self.screen, color, self.rec, 0)
+        pygame.draw.rect(self.screen, (153, 102, 5), (self.x // 2 - 80, self.y // 2 - 30, 160, 60))
+        text_1 = font.render('Подтвердить', True, (255, 255, 255))
+        self.screen.blit(text_1, (self.x // 2 - 75, self.y // 2 - 15))
+
+        txt = self.font.render(text, True, (0, 0, 0))
+        self.screen.blit(txt, (self.rec.x + 5, self.rec.y + 5))
+
+        font_0 = pygame.font.Font(None, 20)
+        text_0 = font_0.render(warning, True, (255, 0, 0))
+        self.screen.blit(text_0, (270, 2 * (self.y / 3) + 20))

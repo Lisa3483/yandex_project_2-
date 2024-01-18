@@ -2,8 +2,9 @@ import pygame
 
 
 class Death:
-    def __init__(self, screen):
+    def __init__(self, screen, game):
         self.screen = screen
+        self.game = game
         self.flag = 8
         self.x, self.y = 800, 600
 
@@ -47,4 +48,6 @@ class Death:
         self.screen.blit(text, (self.x - self.x // 6 - 100 - w // 2, 475 - h // 2))
 
         pygame.display.flip()
+
+
 

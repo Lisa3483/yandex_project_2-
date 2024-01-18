@@ -71,6 +71,9 @@ class Main:
         elif flag == 10:
             self.fc = SideMenu(self.screen)
 
+        elif flag == 12:
+            pass
+
 
 if __name__ == '__main__':
     pygame.init()

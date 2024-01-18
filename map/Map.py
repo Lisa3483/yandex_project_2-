@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 from pygame import Rect
-from F_draw_map import read_tiles
+from map.F_draw_map import read_tiles
 import numpy as np
 
 from random import randint
@@ -24,8 +24,7 @@ class Map:
 
         self.scrolling = True
 
-        self.load_tileset("tileset2.bmp")
-
+        self.load_tileset()
         self.reset()
         self.randomize()
 
@@ -40,9 +39,9 @@ class Map:
         print(self.offset)
         print(1)
 
-    def load_tileset(self, image="tileset2.bmp"):
+    def load_tileset(self):
         """load tileset image"""
-        self.tileset = pygame.image.load('images/tileset2.bmp')
+        self.tileset = pygame.image.load('map/images/tileset2.bmp')
         self.rect = self.tileset.get_rect()
 
         # def load_tileset_plants(self, image="plants.bmp"):
@@ -80,7 +79,7 @@ class Map:
         # self.tiles[1, :] = TILE_ID_ROAD
         # self.tiles[:, 2] = TILE_ID_ROAD
 
-        self.tiles = read_tiles('output.txt')
+        self.tiles = read_tiles('map/map.txt')
         if debug:
             print("\n-- self.tiles = --\n", self.tiles)
 

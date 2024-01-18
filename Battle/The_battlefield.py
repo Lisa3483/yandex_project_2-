@@ -5,7 +5,7 @@ import sys
 import pygame
 
 from Units import Unit
-
+from database_creator_1 import DataBasecreator
 
 class Thebattlefield:
     # создание поля
@@ -92,6 +92,8 @@ class Thebattlefield:
             # думаю стоит добавить сюда отрисовку уведомления об окончание боя, и вывести статистику потерь(это скореее для меня)
 
     def start_battle(self, number_of_battle):
+        data_b = DataBasecreator()
+        data_b.create()
         self.battle_is_running = True
         un = Unit()
         self.lst = un.the_sequence_of_the_move()

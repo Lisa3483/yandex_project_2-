@@ -7,6 +7,7 @@ import pygame
 from Units import Unit
 from database_creator_1 import DataBasecreator
 
+
 class Thebattlefield:
     # создание поля
     def __init__(self, width, height):
@@ -23,10 +24,22 @@ class Thebattlefield:
         self.board = [[0] * width for _ in range(height)]
         self.number_of_battle = 0
         self.lst = []
-        # self.image = Image1.image
-        # self.rect = self.image.get_rect()
-        # self.rect.x = 0
-        # self.rect.y = 0
+        self.sprite_image_angel = pygame.image.load('sprites/img_of_angel.png')
+        self.sprite_image_dark_horse = pygame.image.load('sprites/img_of_dark_horse.png')
+        self.sprite_image_skelet = pygame.image.load('sprites/img_of_skelet.png')
+        self.sprite_image_skelet_warrior = pygame.image.load('sprites/img_of_skeleton-wariorr.png')
+        self.sprite_image_spear = pygame.image.load('sprites/img_of_spear.png')
+        self.sprite_image_sword = pygame.image.load('sprites/img_of_sword.png')
+        self.sprite_image_paladin = pygame.image.load('sprites/img_of_paladin.png')
+        self.sprite_image_ghost = pygame.image.load('sprites/img_of_gost.png')
+        self.sprite_image_horse = pygame.image.load('sprites/img_of_horse.png')
+        self.sprite_image_dragon = pygame.image.load('sprites/img_of_dragon.png')
+
+    def retr_selfrect_x(self, x):
+        return self.cell_size * x + self.left + 5
+
+    def retr_selfrect_y(self, y):
+        return self.cell_size * y + self.top + 5
 
     def load_image(self, name, colorkey=None):
         fullname = os.path.join('sprites', name)
@@ -72,18 +85,77 @@ class Thebattlefield:
             for x in range(self.width):
                 for y in range(self.height):
                     if self.board[y][x]:
-                        # im = Image1()
-                        # image = im.image
-                        # self.rect = image.get_rect()
-                        # self.rect.x = self.cell_size * x + self.left + 5
-                        # self.rect.y = self.cell_size * y + self.top + 5
-                        # sprites.draw(screen, self.rect.x, self.rect.y)
-                        pygame.draw.rect(screen,
-                                         pygame.Color(100 - self.board[y][x] * 10, 100 + self.board[y][x] * 10, 100),
-                                         (self.cell_size * x + self.left + 5,
-                                          self.cell_size * y + self.top + 5,
-                                          80,
-                                          80))
+                        font = pygame.font.Font(None, 36)
+                        if self.board[y][x] == 5:
+                            screen.blit(self.sprite_image_angel,
+                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5))
+                            text = font.render(f"{self.units_qualitys[4]}", True, (255, 255, 255))
+                            place = text.get_rect(center=(
+                            self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 + 75))
+                            screen.blit(text, place)
+                        elif self.board[y][x] == 1:
+                            screen.blit(self.sprite_image_spear,
+                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5))
+                            text = font.render(f"{self.units_qualitys[0]}", True, (255, 255, 255))
+                            place = text.get_rect(center=(
+                            self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 + 75))
+                            screen.blit(text, place)
+                        elif self.board[y][x] == 2:
+                            screen.blit(self.sprite_image_sword,
+                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5))
+                            text = font.render(f"{self.units_qualitys[1]}", True, (255, 255, 255))
+                            place = text.get_rect(center=(
+                            self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 + 75))
+                            screen.blit(text, place)
+                        elif self.board[y][x] == 3:
+                            screen.blit(self.sprite_image_horse,
+                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5))
+                            text = font.render(f"{self.units_qualitys[2]}", True, (255, 255, 255))
+                            place = text.get_rect(center=(
+                            self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 + 75))
+                            screen.blit(text, place)
+                        elif self.board[y][x] == 4:
+                            screen.blit(self.sprite_image_paladin,
+                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5))
+                            text = font.render(f"{self.units_qualitys[3]}", True, (255, 255, 255))
+                            place = text.get_rect(center=(
+                            self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 + 75))
+                            screen.blit(text, place)
+                        elif self.board[y][x] == 6:
+                            screen.blit(self.sprite_image_skelet,
+                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5))
+                            text = font.render(f"{self.units_qualitys[5]}", True, (255, 255, 255))
+                            place = text.get_rect(center=(
+                            self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 + 75))
+                            screen.blit(text, place)
+                        elif self.board[y][x] == 7:
+                            screen.blit(self.sprite_image_skelet_warrior,
+                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5))
+                            text = font.render(f"{self.units_qualitys[6]}", True, (255, 255, 255))
+                            place = text.get_rect(center=(
+                            self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 + 75))
+                            screen.blit(text, place)
+                        elif self.board[y][x] == 8:
+                            screen.blit(self.sprite_image_ghost,
+                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5))
+                            text = font.render(f"{self.units_qualitys[7]}", True, (255, 255, 255))
+                            place = text.get_rect(center=(
+                            self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 + 75))
+                            screen.blit(text, place)
+                        elif self.board[y][x] == 9:
+                            screen.blit(self.sprite_image_dark_horse,
+                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5))
+                            text = font.render(f"{self.units_qualitys[8]}", True, (255, 255, 255))
+                            place = text.get_rect(center=(
+                            self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 + 75))
+                            screen.blit(text, place)
+                        elif self.board[y][x] == 10:
+                            screen.blit(self.sprite_image_dragon,
+                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5))
+                            text = font.render(f"{self.units_qualitys[9]}", True, (255, 255, 255))
+                            place = text.get_rect(center=(
+                            self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 + 75))
+                            screen.blit(text, place)
             # отрисовка рамок для клеточного поля
         else:
             pygame.draw.rect(screen, pygame.Color(200, 10, 87),
@@ -285,14 +357,14 @@ class Thebattlefield:
 
 class Image1(pygame.sprite.Sprite):
     bfelld = Thebattlefield(8, 16)
-    image = bfelld.load_image("1705599505984pe8jdtcn.png")
+    image = bfelld.load_image("img_of_bf.png")
 
     def __init__(self, *group):
         super().__init__(*group)
         self.image = Image1.image
         self.rect = self.image.get_rect()
-        self.rect.x = 0
-        self.rect.y = 0
+        self.rect.x = 80
+        self.rect.y = 90
 
     def update(self):
         pass
@@ -304,6 +376,8 @@ if __name__ == '__main__':
     im = Image1()
     sprites = pygame.sprite.Group()
     sprites.add(im)
+    pygame.mixer.music.load("music/music_1.mp3")
+    pygame.mixer.music.play(-1)
 
     size = width, height = 1600, 900
     screen = pygame.display.set_mode(size)
@@ -325,6 +399,7 @@ if __name__ == '__main__':
                 if event.key == pygame.K_2:
                     board.round_move_enemy()
         screen.fill((0, 0, 0))
+        sprites.draw(screen)
         board.render(screen)
         pygame.display.flip()
         clock.tick(fps)

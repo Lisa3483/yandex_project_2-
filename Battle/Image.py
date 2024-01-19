@@ -5,7 +5,7 @@ from The_battlefield import Thebattlefield
 
 class Image(pygame.sprite.Sprite):
     bfelld = Thebattlefield(8, 16)
-    image = bfelld.load_image("1705599505984pe8jdtcn.png")
+    image = bfelld.load_image("img_of_spear.png")
 
     def __init__(self, *group):
         super().__init__(*group)

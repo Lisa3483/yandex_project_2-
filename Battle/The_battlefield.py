@@ -3,11 +3,12 @@ import sqlite3
 import sys
 
 import pygame
-
+from map import Map
 from Units import Unit
 from database_creator_1 import DataBasecreator
 from spell_book import Spell_book
-
+from End_windows import end_game_window
+from End_windows import death_window
 
 class Thebattlefield:
     # создание поля
@@ -173,10 +174,12 @@ class Thebattlefield:
                 screen.blit(self.sprite_image_bolt,
                             (self.cell_size * self.tick[1] + self.left + 5,
                              self.cell_size * self.tick[2] + self.top + 5 - 30))
+        elif self.units_on_board():
+            en = end_game_window.EndGame(screen)
+            en.okno()
         else:
-            pygame.draw.rect(screen, pygame.Color(200, 10, 87),
-                             (0, 0, self.width * self.cell_size + (2 * self.left),
-                              self.height * self.cell_size + 2 * self.top))
+            en = death_window.Death(screen)
+            en.okno()
 
     def start_battle(self, number_of_battle):
         self.cast_point = 5
@@ -561,9 +564,11 @@ class Thebattlefield:
         for enemy_unit in self.units_qualitys[5:]:
             enemy_sum += int(enemy_unit)
         if not hero_sum:
-            pass
+            self.end_battle()
+            return 0
         if not enemy_sum:
             self.end_battle()
+            return 1
 
 
 class Image1(pygame.sprite.Sprite):
@@ -611,6 +616,11 @@ def battle_window(number_of_battle):
                             board.round_move_invent()
                         except Exception:
                             board.end_battle()
+                            if number_of_battle == 1:
+                                Map.FLAG_ENEMY_1 = False
+                            else:
+                                Map.FLAG_ENEMY_2 = False
+
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_3:

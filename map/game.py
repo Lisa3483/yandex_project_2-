@@ -208,7 +208,7 @@ class Game:
 
     def draw_hero(self):
         global animation_count, right, left, up, down, x, y, speed, x_new, y_new, \
-            player_down, player_right, player_up, player_left, player_stand
+            player_down, player_right, player_up, player_left, player_stand, button_pressed
         player_stand = pygame.image.load('map//hero_image//Hero_forward2.png')
         player_right = [pygame.image.load(f'map//hero_image//Hero_right{i}.png') for i in range(1, 4)]
         player_left = [pygame.image.load(f'map//hero_image//Hero_left{i}.png') for i in range(1, 4)]

@@ -12,7 +12,7 @@ from Side_Menu.side_menu import SideMenu
 from Music.Menu_music import Music
 from map.game import Game
 
-
+flag = 1
 
 
 class Main:
@@ -31,6 +31,8 @@ class Main:
         self.fc = StartStateMenu(self.screen)
 
         while running:
+
+            print(flag)
             self.rer()
             self.flags()
             self.windows()
@@ -61,10 +63,10 @@ class Main:
             self.name = Name(self.screen).names()
 
         elif flag == 7:
-            self.fc = Game(self.screen)
+            self.fc = Game(self.screen, self.first_time)
             self.first_time = False
             self.menu = 'side'
-            self.clock = Game(self.screen).get_clock()
+            self.clock = Game(self.screen, self.first_time).get_clock()
 
 
         elif flag == 2:

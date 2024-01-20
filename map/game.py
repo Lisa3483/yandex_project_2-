@@ -2,48 +2,30 @@ import pygame
 import sys
 from pygame.locals import *
 from pygame import Color
-#  from map import Map    
-from map.Map import Map
+from map.Map import Map, FLAG_ENEMY_1, FLAG_ENEMY_2
 
-GAME_ABOUT = """about:
-    -using tileset and numpy 2D array for map data.
-    -randomizes tiles, and creates roads
-    
-    -Howto set/get tile at loc=(x,y)
-        tiles[x,y] = 2
-        tileid = tiles[x,y]
-    
-"""
-GAME_TITLE = "maptiles numpy {nin.example} "
-GAME_HOTKEYS = """== Hotkeys! ===
-    space = randomize tiles
-    ESC    = quit
-    s = toggle scrolling
-"""
+TILE = 8
 
 
 class Game:
-    """game Main entry point. handles intialization of game and graphics.    
-    members:
-        map : map.Map() instance
-    """
     done = False
 
     def __init__(self, width=700, height=500):
-        """Initialize PyGame"""
+
         pygame.init()
         self.width, self.height = width, height
 
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((self.width, self.height))
-        pygame.display.set_caption(GAME_TITLE)
 
+        self.enemy1_x = 200
+        self.enemy1_y = 400
+        self.enemy2_x = 800
+        self.enemy2_y = 50
         self.map = Map(self)
         self.draw_hero()
 
-        print(GAME_TITLE)
-        print(GAME_ABOUT)
-        print(GAME_HOTKEYS)
+        pygame.display.update()
 
         self.main_loop()
 
@@ -82,11 +64,13 @@ class Game:
         else:
             self.screen.blit(self.player_stand,
                              (self.x, self.y))  # Всегда отрисовываем персонажа, когда он не перемещается
-
+        if FLAG_ENEMY_1:
+            self.screen.blit(self.enemy1, (self.enemy1_x, self.enemy1_y))
+        if FLAG_ENEMY_2:
+            self.screen.blit(self.enemy2, (self.enemy2_x, self.enemy2_y))
         pygame.display.update()
 
     def player(self):
-        # Все переменные, которые будут использоваться не только в этой функции, объявляем как глобальные
 
         if self.x != self.x_new or self.y != self.y_new:
             '''Условие, если координата x игрока не равна координате x курсора 
@@ -97,67 +81,103 @@ class Game:
                 if self.x > self.x_new and self.y > self.y_new:
                     '''Условие, если координата x игрока больше координаты x курсора 
                 или координата y игрока больше координаты y курсора'''
-                    self.left = True  # Отрисовываем анимацию перемещения влево
-                    self.right = False
-                    self.down = False
-                    self.up = False
-                    self.x -= self.speed  # Перемещаем персонажа влево
-                    self.y -= self.speed  # И одновременно перемещаем его вверх
-                    self.map.scroll([self.speed, self.speed])
+                    if self.map.collision_map[(self.x - self.speed) * (-1) // TILE][
+                        (self.y - self.speed) * (-1) // TILE] == 0:
+                        self.enemy1_x += self.speed
+                        self.enemy1_y += self.speed
+                        self.enemy2_x += self.speed
+                        self.enemy2_y += self.speed
+                        self.left = True  # Отрисовываем анимацию перемещения влево
+                        self.right = False
+                        self.down = False
+                        self.up = False
+                        self.x -= self.speed  # Перемещаем персонажа влево
+                        self.y -= self.speed  # И одновременно перемещаем его вверх
+                        self.map.scroll([self.speed, self.speed])
                 elif self.x < self.x_new and self.y < self.y_new:
-                    self.left = False
-                    self.right = True  # Отрисовываем анимацию перемещения вправо
-                    self.down = False
-                    self.up = False
-                    self.x += self.speed  # Перемещаем персонажа вправо
-                    self.y += self.speed  # И одновременно перемещаем его вниз
-                    self.map.scroll([self.speed * (-1), self.speed * (-1)])
+                    if self.map.collision_map[(self.x + self.speed) * (-1) // TILE][
+                        (self.y + self.speed) * (-1) // TILE] == 0:
+                        self.enemy1_x -= self.speed
+                        self.enemy1_y -= self.speed
+                        self.enemy2_x -= self.speed
+                        self.enemy2_y -= self.speed
+                        self.left = False
+                        self.right = True  # Отрисовываем анимацию перемещения вправо
+                        self.down = False
+                        self.up = False
+                        self.x += self.speed  # Перемещаем персонажа вправо
+                        self.y += self.speed  # И одновременно перемещаем его вниз
+                        self.map.scroll([self.speed * (-1), self.speed * (-1)])
                 elif self.x < self.x_new and self.y > self.y_new:
-                    self.left = False
-                    self.right = True  # Отрисовываем анимацию перемещения вправо
-                    self.down = False
-                    self.up = False
-                    self.x += self.speed  # Перемещаем персонажа вправо
-                    self.y -= self.speed  # И одновременно перемещаем его вверх
-                    self.map.scroll([self.speed * (-1), self.speed])
+                    if self.map.collision_map[(self.x + self.speed) * (-1) // TILE][
+                        (self.y - self.speed) * (-1) // TILE] == 0:
+                        self.enemy1_x -= self.speed
+                        self.enemy1_y += self.speed
+                        self.enemy2_x -= self.speed
+                        self.enemy2_y += self.speed
+                        self.left = False
+                        self.right = True  # Отрисовываем анимацию перемещения вправо
+                        self.down = False
+                        self.up = False
+                        self.x += self.speed  # Перемещаем персонажа вправо
+                        self.y -= self.speed  # И одновременно перемещаем его вверх
+                        self.map.scroll([self.speed * (-1), self.speed])
                 elif self.x > self.x_new and self.y < self.y_new:
-                    self.left = True  # Отрисовываем анимацию перемещения влево
-                    self.right = False
-                    self.down = False
-                    self.up = False
-                    self.x -= self.speed  # Перемещаем персонажа влево
-                    self.y += self.speed  # И одновременно перемещаем его вниз
-                    self.map.scroll([self.speed, self.speed * (-1)])
+                    if self.map.collision_map[(self.x - self.speed) * (-1) // TILE][
+                        (self.y + self.speed) * (-1) // TILE] == 0:
+                        self.enemy1_x += self.speed
+                        self.enemy1_y -= self.speed
+                        self.enemy2_x += self.speed
+                        self.enemy2_y -= self.speed
+                        self.left = True  # Отрисовываем анимацию перемещения влево
+                        self.right = False
+                        self.down = False
+                        self.up = False
+                        self.x -= self.speed  # Перемещаем персонажа влево
+                        self.y += self.speed  # И одновременно перемещаем его вниз
+                        self.map.scroll([self.speed, self.speed * (-1)])
             elif self.y != self.y_new:
                 if self.y < self.y_new:
-                    self.left = False
-                    self.right = False
-                    self.down = True  # Отрисовываем анимацию перемещения вниз
-                    self.up = False
-                    self.y += self.speed  # Перемещаем персонажа вниз
-                    self.map.scroll([0, self.speed * (-1)])
+                    if self.map.collision_map[(self.x) * (-1) // TILE][(self.y + self.speed) * (-1) // TILE] == 0:
+                        self.enemy1_y -= self.speed
+                        self.enemy2_y -= self.speed
+                        self.left = False
+                        self.right = False
+                        self.down = True  # Отрисовываем анимацию перемещения вниз
+                        self.up = False
+                        self.y += self.speed  # Перемещаем персонажа вниз
+                        self.map.scroll([0, self.speed * (-1)])
                 elif self.y > self.y_new:
-                    self.left = False
-                    self.right = False
-                    self.down = False
-                    self.up = True  # Отрисовываем анимацию перемещения вверх
-                    self.y -= self.speed  # Перемещаем персонажа вверх
-                    self.map.scroll([0, self.speed])
+                    if self.map.collision_map[(self.x) * (-1) // TILE][(self.y - self.speed) * (-1) // TILE] == 0:
+                        self.enemy1_y += self.speed
+                        self.enemy2_y += self.speed
+                        self.left = False
+                        self.right = False
+                        self.down = False
+                        self.up = True  # Отрисовываем анимацию перемещения вверх
+                        self.y -= self.speed  # Перемещаем персонажа вверх
+                        self.map.scroll([0, self.speed])
             elif self.x != self.x_new:
                 if self.x < self.x_new:
-                    self.x += self.speed  # Перемещаем персонажа вправо
-                    self.left = False
-                    self.right = True  # Отрисовываем анимацию перемещения вправо
-                    self.down = False
-                    self.up = False
-                    self.map.scroll([self.speed * (-1), 0])
+                    if self.map.collision_map[(self.x + self.speed) * (-1) // TILE][(self.y) * (-1) // TILE] == 0:
+                        self.enemy1_x -= self.speed
+                        self.enemy2_x -= self.speed
+                        self.x += self.speed  # Перемещаем персонажа вправо
+                        self.left = False
+                        self.right = True  # Отрисовываем анимацию перемещения вправо
+                        self.down = False
+                        self.up = False
+                        self.map.scroll([self.speed * (-1), 0])
                 elif self.x > self.x_new:
-                    self.x -= self.speed  # Перемещаем персонажа влево
-                    self.left = True  # Отрисовываем анимацию перемещения влево
-                    self.right = False
-                    self.down = False
-                    self.up = False
-                    self.map.scroll([self.speed, 0])
+                    if self.map.collision_map[(self.x - self.speed) * (-1) // TILE][(self.y) * (-1) // TILE] == 0:
+                        self.enemy1_x += self.speed
+                        self.enemy2_x += self.speed
+                        self.x -= self.speed  # Перемещаем персонажа влево
+                        self.left = True  # Отрисовываем анимацию перемещения влево
+                        self.right = False
+                        self.down = False
+                        self.up = False
+                        self.map.scroll([self.speed, 0])
         else:
             self.left = False
             self.right = False
@@ -171,7 +191,8 @@ class Game:
         self.player_left = [pygame.image.load(f'map//hero_image//Hero_left{i}.png') for i in range(1, 4)]
         self.player_up = [pygame.image.load(f'map//hero_image//Hero_top{i}.png') for i in range(1, 4)]
         self.player_down = [pygame.image.load(f'map//hero_image//Hero_forward{i}.png') for i in range(1, 4)]
-
+        self.enemy1 = pygame.image.load('map//images//img_of_skeleton-wariorr.png')
+        self.enemy2 = pygame.image.load('map//images//img_of_sword.png')
         self.clock = pygame.time.Clock()
 
         self.x = 50  # Начальные координаты игрока
@@ -195,7 +216,7 @@ class Game:
         self.screen.blit(self.player_stand, (self.x, self.y))
 
     def handle_events(self):
-        """handle events."""
+
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
@@ -224,10 +245,11 @@ class Game:
             self.player()  # Вызываем функциию игрока
 
     def draw(self):
-        """render screen"""
+
         self.screen.fill(Color("black"))
         self.map.draw()
         pygame.display.flip()
+
     def okno(self):
         global warning
         global color, text

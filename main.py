@@ -20,6 +20,7 @@ class Main:
         global flag
         self.first_time = True
         # Music()
+        self.clock = 0
         self.screen = screen
         self.name = ''
         pygame.display.set_caption('The little world')
@@ -63,6 +64,8 @@ class Main:
             self.fc = Game(self.screen)
             self.first_time = False
             self.menu = 'side'
+            self.clock = Game(self.screen).get_clock()
+
 
         elif flag == 2:
             self.fc = Saves(self.screen, self.menu)

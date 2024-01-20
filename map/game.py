@@ -2,7 +2,7 @@ import pygame
 import sys
 from pygame.locals import *
 from pygame import Color
-#  from map import Map    
+#  from map import Map
 from map.Map import Map
 
 GAME_ABOUT = """about:
@@ -49,6 +49,9 @@ class Game:
         self.draw_hero()
 
         self.main_loop()
+
+    def get_clock(self):
+        return self.clock
 
     def okno(self):
         pass

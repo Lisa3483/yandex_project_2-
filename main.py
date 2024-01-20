@@ -1,5 +1,4 @@
 import pygame
-# from map.Map import mapp
 from start_window.StartWindow import StartStateMenu
 from Exit_window.exit import Exit
 from Statistic.stats_window import Statistics

@@ -19,7 +19,7 @@ class Main:
     def __init__(self, screen):
         global flag
         self.first_time = True
-        # Music()
+        Music()
         self.clock = 0
         self.screen = screen
         self.name = ''

@@ -12,19 +12,21 @@ from Side_Menu.side_menu import SideMenu
 from Music.Menu_music import Music
 from map.game import Game
 
-flag = 1
+
 
 
 class Main:
     def __init__(self, screen):
         global flag
-        Music()
+        self.first_time = True
+        # Music()
         self.screen = screen
         self.name = ''
         pygame.display.set_caption('The little world')
         running = True
         self.menu = 'start'
-        self.game = 0
+        self.animation_count = 0
+        self.unic_number = 0
         self.fc = StartStateMenu(self.screen)
 
         while running:
@@ -58,19 +60,32 @@ class Main:
             self.name = Name(self.screen).names()
 
         elif flag == 7:
-            self.fc = Game()
+            self.fc = Game(self.screen)
+            self.first_time = False
+            self.menu = 'side'
 
         elif flag == 2:
             self.fc = Saves(self.screen, self.menu)
 
+
         elif flag == 8:
             self.fc = Death(self.screen)
+            self.first_time = True
 
         elif flag == 9:
-            self.fc = EndGame(self.screen, self.game)
+            self.fc = EndGame(self.screen, self.unic_number)
+            self.first_time = True
 
         elif flag == 10:
             self.fc = SideMenu(self.screen)
+            self.first_time = True
+
+        elif flag == 12:
+            self.fc = SaveGame(self.screen, self.name, self.menu, self.unic_number)
+            if self.unic_number == 0:
+                self.unic_number = SaveGame(self.screen, self.name, self.menu, 0).get_unic_number()
+
+
 
 
 if __name__ == '__main__':

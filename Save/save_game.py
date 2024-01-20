@@ -8,8 +8,12 @@ class SaveGame:
         self.name = name
         self.menu = menu
         self.unic_number = unic_number
-        self.flag = 7
+        self.unic_number = unic_number
+        self.flag = 12
         self.screen = screen
+
+    def get_unic_number(self):
+        return self.unic_number
 
     def all_events(self):
         for event in pygame.event.get():
@@ -55,6 +59,7 @@ class SaveGame:
                     cur = con.cursor()
                     result = cur.execute("""SELECT * FROM stats""").fetchall()[0]
                     self.id = result[0] + 1
+                    self.unic_number = self.id
                     res = """INSERT INTO stats (unic_number, deaths, kills, time, wins, battles) 
                     VALUES (?, 0, 0, 0, 0, 0);"""
                     res1 = (self.id,)
@@ -72,7 +77,10 @@ class SaveGame:
                     cur.execute(res, res1)
                     con.commit()
                     self.okno()
+                self.flag = 7
         con.close()
+
+
 
     def baza(self):
 
@@ -90,5 +98,5 @@ class SaveGame:
                     text = font.render(i[1], True, (255, 255, 255))
                     self.screen.blit(text, (self.x // 4, 45 + 130 * c))
                     c += 1
-        cur.close()
+        con.close()
 

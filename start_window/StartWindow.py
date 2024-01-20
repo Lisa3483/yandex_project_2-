@@ -12,6 +12,7 @@ class StartStateMenu:
         self.screen = screen
         self.x, self.y = 800, 600
 
+
     def okno(self):
         global color
         image = pygame.image.load('images/sstone.jpeg').convert_alpha()
@@ -29,6 +30,7 @@ class StartStateMenu:
         self.text_button()
 
         pygame.display.flip()
+
 
     def all_events(self):
         for event in pygame.event.get():

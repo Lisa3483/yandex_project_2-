@@ -60,7 +60,7 @@ class SideMenu:
 
 class Buttons:
     def __init__(self, screen, mouse_x, mouse_y):
-        self.flag = 1
+        self.flag = 10
         self.screen = screen
         self.x, self.y = 800, 600
         self.click_buttons(mouse_x, mouse_y)

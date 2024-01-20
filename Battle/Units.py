@@ -50,7 +50,6 @@ class Unit:
         cursor.execute(
             f"SELECT unit_min_damage, unit_max_damage, unit_attack FROM units WHERE id = '{number}'")
         fetch = cursor.fetchall()
-        print(fetch)
         self.unit_min_damage = fetch[0][0]
         self.unit_max_damage = fetch[0][1]
         self.unit_attack = fetch[0][2]
@@ -61,7 +60,9 @@ class Unit:
 
         cursor.execute(
             f"SELECT unit_defence FROM units WHERE id = '{number_2}'")
+        print(number_2)
         fetch = cursor.fetchall()
+        print(fetch[0][0])
         self.unit_defence = fetch[0][0]
         conn.close()
         conn = sqlite3.connect('../DataBase/game.db')

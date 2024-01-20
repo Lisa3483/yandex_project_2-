@@ -260,7 +260,6 @@ class Thebattlefield:
                     for x_0 in range(self.width):
                         for y_0 in range(self.height):
                             if int(self.board[y_0][x_0]) == int(id[0]):
-                                print(self.board[y_0][x_0], 'походил')
                                 while True:
                                     for e in pygame.event.get():
                                         if not fl:
@@ -385,8 +384,7 @@ class Thebattlefield:
                                 fl_enemy = True
                                 for x_1 in range(self.width):
                                     for y_1 in range(self.height):
-                                        if int(self.board[y_1][x_1]) <= 5:
-                                            print(self.board[y_0][x_0], 'походил')
+                                        if int(self.board[y_1][x_1]) <= 5 and int(self.board[y_1][x_1]) > 0:
                                             x_last = 0
                                             y_last = 0
                                             if x_0 > x_1 and y_0 > y_1:

@@ -60,9 +60,7 @@ class Unit:
 
         cursor.execute(
             f"SELECT unit_defence FROM units WHERE id = '{number_2}'")
-        print(number_2)
         fetch = cursor.fetchall()
-        print(fetch[0][0])
         self.unit_defence = fetch[0][0]
         conn.close()
         conn = sqlite3.connect('../DataBase/game.db')

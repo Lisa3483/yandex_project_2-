@@ -607,7 +607,11 @@ def battle_window(number_of_battle):
                     running = False
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_1:
-                        board.round_move_invent()
+                        try:
+                            board.round_move_invent()
+                        except Exception:
+                            board.end_battle()
+
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_3:
                         board.cast()

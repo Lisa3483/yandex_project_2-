@@ -37,7 +37,7 @@ class Unit:
             self.the_sequence_of_the_move_list.append(row)
 
         # Закрываем соединение с базой данных
-        return self.the_sequence_of_the_move_list
+        return sorted(self.the_sequence_of_the_move_list, key=get_second_element)
         # вернули список последовательностей ходов юнитов по их id
 
     def get_total_damage(self, unit_1_id, unit_2_id):
@@ -73,7 +73,7 @@ class Unit:
         for one_unit_damage in range(int(self.unit_quantity)):
             self.total_damage += random.randint(self.unit_min_damage, self.unit_max_damage)
         self.total_damage *= (1 + (self.unit_attack - self.unit_defence) * 0.05)
-        return self.total_damage
+        return int(self.total_damage)
 
 
 def get_second_element(tuplle):

@@ -18,11 +18,11 @@ class DataBasecreator:
         ''')
         cursor.execute('''
                 INSERT INTO units_in_inventory (unit_id, quantity)
-                VALUES (1, 100)
+                VALUES (1, 500)
             ''')
         cursor.execute('''
                 INSERT INTO units_in_inventory (unit_id, quantity)
-                VALUES (2, 100)
+                VALUES (2, 200)
             ''')
         cursor.execute('''
                 INSERT INTO units_in_inventory (unit_id, quantity)
@@ -30,27 +30,30 @@ class DataBasecreator:
             ''')
         cursor.execute('''
                 INSERT INTO units_in_inventory (unit_id, quantity)
-                VALUES (4, 100)
+                VALUES (4, 50)
             ''')
         cursor.execute('''
                 INSERT INTO units_in_inventory (unit_id, quantity)
-                VALUES (5, 100)
+                VALUES (5, 20)
             ''')
         conn.commit()
+        conn.close()
+
+        conn = sqlite3.connect('../DataBase/game.db')
         cursor = conn.cursor()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS enemy_units_in_battle (
                 number_of_battle INTEGER PRIMARY KEY AUTOINCREMENT,
-                enemy_unit_id_1,
-                enemy_unit_quantity_1,
-                enemy_unit_id_2,
-                enemy_unit_quantity_2,
-                enemy_unit_id_3,
-                enemy_unit_quantity_3,
-                enemy_unit_id_4,
-                enemy_unit_quantity_4,
-                enemy_unit_id_5,
-                enemy_unit_quantity_5
+                enemy_unit_id_1 INTEGER,
+                enemy_unit_quantity_1 INTEGER,
+                enemy_unit_id_2 INTEGER,
+                enemy_unit_quantity_2 INTEGER,
+                enemy_unit_id_3 INTEGER,
+                enemy_unit_quantity_3 INTEGER,
+                enemy_unit_id_4 INTEGER,
+                enemy_unit_quantity_4 INTEGER,
+                enemy_unit_id_5 INTEGER,
+                enemy_unit_quantity_5 INTEGER
             )
         ''')
         cursor.execute('''
@@ -64,7 +67,7 @@ class DataBasecreator:
                 enemy_unit_quantity_4,
                 enemy_unit_id_5,
                 enemy_unit_quantity_5)
-                VALUES (6, 100, 7, 20, 8, 8, 9, 7, 10, 44)
+                VALUES (6, 250, 7, 300, 8, 200, 9, 20, 10, 0)
             ''')
         cursor.execute('''
                 INSERT INTO enemy_units_in_battle (enemy_unit_id_1,
@@ -77,7 +80,7 @@ class DataBasecreator:
                 enemy_unit_quantity_4,
                 enemy_unit_id_5,
                 enemy_unit_quantity_5)
-                VALUES (6, 100, 7, 20, 8, 8, 9, 7, 10, 43)
+                VALUES (6, 100, 7, 20, 8, 30, 9, 15, 10, 50)
             ''')
         conn.commit()
         conn.close()
@@ -98,7 +101,6 @@ class DataBasecreator:
                 unit_hp INTEGER
             )
         ''')
-        creature_list = [['0 - ', ]]
         cursor.execute('''
                 INSERT INTO units (unit_min_damage, unit_max_damage, unit_speed, unit_attack, unit_defence, the_ability,
                  quantity, unit_hp)

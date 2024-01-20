@@ -6,6 +6,7 @@ import pygame
 
 from Units import Unit
 from database_creator_1 import DataBasecreator
+from spell_book import Spell_book
 
 
 class Thebattlefield:
@@ -34,8 +35,11 @@ class Thebattlefield:
         self.sprite_image_ghost = pygame.image.load('sprites/img_of_gost.png')
         self.sprite_image_horse = pygame.image.load('sprites/img_of_horse.png')
         self.sprite_image_dragon = pygame.image.load('sprites/img_of_dragon.png')
+        self.sprite_image_spell = pygame.image.load('sprites/img_of_book.png')
+        self.sprite_image_bolt = pygame.image.load('sprites/bolt.png')
         self.half_hp_lst = [4, 7, 12, 30, 120, 4, 8, 9, 33, 100]
         self.cast_point = 0
+        self.tick = [0, 0, 0]
 
     def retr_selfrect_x(self, x):
         return self.cell_size * x + self.left + 5
@@ -66,24 +70,28 @@ class Thebattlefield:
         self.cell_size = cell_size
 
     def render(self, screen):
+        self.screen = screen
         if self.battle_is_running:
             for y in range(self.height):
                 for x in range(self.width):
                     pygame.draw.rect(screen, pygame.Color(255, 255, 255), (
-                        x * self.cell_size + self.left, y * self.cell_size + self.top,
+                        x * self.cell_size + self.left, y * self.cell_size + self.top - 30,
                         self.cell_size,
                         self.cell_size), 1)
             # отрисовка клеточек на клеточном поле
             pygame.draw.rect(screen, pygame.Color(202, 196, 176),
-                             (0, 0, self.width * self.cell_size + (2 * self.left), self.top))
+                             (0, 0, self.width * self.cell_size + (2 * self.left), self.top - 30))
             pygame.draw.rect(screen, pygame.Color(202, 196, 176), (
-                0, self.height * self.cell_size + self.top, self.width * self.cell_size + (2 * self.left),
-                self.height * self.cell_size + (self.top * 2)))
+                0, self.height * self.cell_size + self.top - 30, self.width * self.cell_size + (2 * self.left),
+                self.height * self.cell_size + (self.top * 2) - 30))
             pygame.draw.rect(screen, pygame.Color(202, 196, 176),
                              (0, 0, self.left, self.height * self.cell_size + self.top * 2))
             pygame.draw.rect(screen, pygame.Color(202, 196, 176),
                              (self.width * self.cell_size + (1 * self.left), 0, self.left,
                               self.height * self.cell_size + self.top * 2))
+            screen.blit(self.sprite_image_spell,
+                        (self.cell_size * 16 + self.left - 40, self.cell_size * 8 + self.top - 25))
+
             for x in range(self.width):
                 for y in range(self.height):
                     if self.board[y][x]:
@@ -92,85 +100,89 @@ class Thebattlefield:
                         font = pygame.font.Font(None, 36)
                         if self.board[y][x] == 5:
                             screen.blit(self.sprite_image_angel,
-                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5))
+                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5 - 30))
                             text = font.render(f"{self.units_qualitys[4]}", True, (255, 255, 255))
                             place = text.get_rect(center=(
-                                self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 + 75))
+                                self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 - 30 + 75))
                             screen.blit(text, place)
                         elif self.board[y][x] == 1:
                             screen.blit(self.sprite_image_spear,
-                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5))
+                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5 - 30))
                             text = font.render(f"{self.units_qualitys[0]}", True, (255, 255, 255))
                             place = text.get_rect(center=(
-                                self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 + 75))
+                                self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 - 30 + 75))
                             screen.blit(text, place)
                         elif self.board[y][x] == 2:
                             screen.blit(self.sprite_image_sword,
-                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5))
+                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5 - 30))
                             text = font.render(f"{self.units_qualitys[1]}", True, (255, 255, 255))
                             place = text.get_rect(center=(
-                                self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 + 75))
+                                self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 - 30 + 75))
                             screen.blit(text, place)
                         elif self.board[y][x] == 3:
                             screen.blit(self.sprite_image_horse,
-                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5))
+                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5 - 30))
                             text = font.render(f"{self.units_qualitys[2]}", True, (255, 255, 255))
                             place = text.get_rect(center=(
-                                self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 + 75))
+                                self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 - 30 + 75))
                             screen.blit(text, place)
                         elif self.board[y][x] == 4:
                             screen.blit(self.sprite_image_paladin,
-                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5))
+                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5 - 30))
                             text = font.render(f"{self.units_qualitys[3]}", True, (255, 255, 255))
                             place = text.get_rect(center=(
-                                self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 + 75))
+                                self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 - 30 + 75))
                             screen.blit(text, place)
                         elif self.board[y][x] == 6:
                             screen.blit(self.sprite_image_skelet,
-                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5))
+                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5 - 30))
                             text = font.render(f"{self.units_qualitys[5]}", True, (255, 255, 255))
                             place = text.get_rect(center=(
-                                self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 + 75))
+                                self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 - 30 + 75))
                             screen.blit(text, place)
                         elif self.board[y][x] == 7:
                             screen.blit(self.sprite_image_skelet_warrior,
-                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5))
+                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5 - 30))
                             text = font.render(f"{self.units_qualitys[6]}", True, (255, 255, 255))
                             place = text.get_rect(center=(
-                                self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 + 75))
+                                self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 - 30 + 75))
                             screen.blit(text, place)
                         elif self.board[y][x] == 8:
                             screen.blit(self.sprite_image_ghost,
-                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5))
+                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5 - 30))
                             text = font.render(f"{self.units_qualitys[7]}", True, (255, 255, 255))
                             place = text.get_rect(center=(
-                                self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 + 75))
+                                self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 - 30 + 75))
                             screen.blit(text, place)
                         elif self.board[y][x] == 9:
                             screen.blit(self.sprite_image_dark_horse,
-                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5))
+                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5 - 30))
                             text = font.render(f"{self.units_qualitys[8]}", True, (255, 255, 255))
                             place = text.get_rect(center=(
-                                self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 + 75))
+                                self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 - 30 + 75))
                             screen.blit(text, place)
                         elif self.board[y][x] == 10:
                             screen.blit(self.sprite_image_dragon,
-                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5))
+                                        (self.cell_size * x + self.left + 5, self.cell_size * y + self.top + 5 - 30))
                             text = font.render(f"{self.units_qualitys[9]}", True, (255, 255, 255))
                             place = text.get_rect(center=(
-                                self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 + 75))
+                                self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 - 30 + 75))
                             screen.blit(text, place)
-            # отрисовка рамок для клеточного поля
+            if self.tick[0] > 0:
+                self.tick[0] -= 1
+                screen.blit(self.sprite_image_bolt,
+                            (self.cell_size * self.tick[1] + self.left + 5,
+                            self.cell_size * self.tick[2] + self.top + 5 - 30))
         else:
             pygame.draw.rect(screen, pygame.Color(200, 10, 87),
                              (0, 0, self.width * self.cell_size + (2 * self.left),
                               self.height * self.cell_size + 2 * self.top))
-            # думаю стоит добавить сюда отрисовку уведомления об окончание боя, и вывести статистику потерь(это скореее для меня)
 
     def start_battle(self, number_of_battle):
-        self.cast_point = number_of_battle * 3
+        self.cast_point = 5
         data_b = DataBasecreator()
         data_b.create()
+        self.number_of_battle = number_of_battle
         self.battle_is_running = True
         un = Unit()
         self.lst = un.the_sequence_of_the_move()
@@ -263,49 +275,42 @@ class Thebattlefield:
                                             if e.type == pygame.MOUSEBUTTONDOWN and e.button == 1:
                                                 x_1, y_1 = (pygame.mouse.get_pos()[0] - self.left) // self.cell_size, (
                                                         pygame.mouse.get_pos()[1] - self.top) // self.cell_size
-                                                if self.board[y_1][x_1] == 0:
-                                                    self.board[y_1][x_1] = int(id[0])
-                                                    self.board[y_0][x_0] = 0
-                                                if self.board[y_1][x_1] > 5:
-                                                    conn = sqlite3.connect('../DataBase/game.db')
-                                                    cursor = conn.cursor()
-                                                    cursor.execute(
-                                                        f"SELECT unit_hp FROM units WHERE id = '{self.board[y_1][x_1]}'")
-                                                    fetch = cursor.fetchall()
-                                                    conn.close()
-                                                    damage = un.get_total_damage(self.board[y_0][x_0],
-                                                                                 self.board[y_1][x_1])
+                                                if x_1 <= 15 and y_1 <= 7:
+                                                    if self.board[y_1][x_1] == 0:
+                                                        self.board[y_1][x_1] = int(id[0])
+                                                        self.board[y_0][x_0] = 0
+                                                    if self.board[y_1][x_1] > 5:
+                                                        conn = sqlite3.connect('../DataBase/game.db')
+                                                        cursor = conn.cursor()
+                                                        cursor.execute(
+                                                            f"SELECT unit_hp FROM units WHERE id = '{self.board[y_1][x_1]}'")
+                                                        fetch = cursor.fetchall()
+                                                        conn.close()
+                                                        damage = un.get_total_damage(self.board[y_0][x_0],
+                                                                                     self.board[y_1][x_1])
 
-                                                    hp = (int(fetch[0][0])) * int(
-                                                        self.units_qualitys[self.board[y_1][x_1] - 1] - 1) + + \
-                                                             self.half_hp_lst[self.board[y_1][x_1] - 1]
-                                                    hp = hp - int(damage)
-                                                    self.half_hp_lst[self.board[y_1][x_1] - 1] = hp % int(
-                                                        fetch[0][0])
-                                                    if hp // int(fetch[0][0]) + self.half_hp_lst[
-                                                        self.board[y_1][x_1] - 1] and \
-                                                            self.half_hp_lst[self.board[y_1][x_1] - 1]:
-                                                        self.units_qualitys[self.board[y_1][x_1] - 1] = hp // int(
-                                                            fetch[0][0]) + 1
-                                                    elif hp // int(fetch[0][0]):
-                                                        self.units_qualitys[self.board[y_1][x_1] - 1] = hp // int(
+                                                        hp = (int(fetch[0][0])) * int(
+                                                            self.units_qualitys[self.board[y_1][x_1] - 1] - 1) + + \
+                                                                 self.half_hp_lst[self.board[y_1][x_1] - 1]
+                                                        hp = hp - int(damage)
+                                                        self.half_hp_lst[self.board[y_1][x_1] - 1] = hp % int(
                                                             fetch[0][0])
-                                                    else:
-                                                        self.board[y_1][x_1] = 0
-                                                    print(self.lst)
-                                                fl = True
+                                                        if hp // int(fetch[0][0]) + self.half_hp_lst[
+                                                            self.board[y_1][x_1] - 1] and \
+                                                                self.half_hp_lst[self.board[y_1][x_1] - 1]:
+                                                            self.units_qualitys[self.board[y_1][x_1] - 1] = hp // int(
+                                                                fetch[0][0]) + 1
+                                                        elif hp // int(fetch[0][0]):
+                                                            self.units_qualitys[self.board[y_1][x_1] - 1] = hp // int(
+                                                                fetch[0][0])
+                                                        else:
+                                                            self.board[y_1][x_1] = 0
+                                                        fl = True
                                     if fl:
                                         break
                             break
                         break
 
-    def round_move_enemy(self):
-        un = Unit()
-        lst = un.the_sequence_of_the_move()
-        if self.battle_is_running:
-            for id in lst:
-                if int(id[0]) <= 5:
-                    pass
                 else:
                     conn = sqlite3.connect('../DataBase/game.db')
                     cursor = conn.cursor()
@@ -359,11 +364,12 @@ class Thebattlefield:
                 continue
 
     def cast(self):
+        fl = 0
+        sp = Spell_book()
         if self.cast_point:
             while True:
                 for e in pygame.event.get():
                     if e.type == pygame.MOUSEBUTTONDOWN and e.button == 1:
-                        print(6)
                         x_1, y_1 = (pygame.mouse.get_pos()[0] - self.left) // self.cell_size, (
                                 pygame.mouse.get_pos()[1] - self.top) // self.cell_size
                         conn = sqlite3.connect('../DataBase/game.db')
@@ -376,24 +382,35 @@ class Thebattlefield:
                             self.cast_point -= 1
                             hp = (int(fetch[0][0])) * int(
                                 self.units_qualitys[self.board[y_1][x_1] - 1] - 1)
+                            hp -= int(sp.bolt(self.number_of_battle))
                             if hp // int(fetch[0][0]):
                                 self.units_qualitys[self.board[y_1][x_1] - 1] = hp // int(
-                                    fetch[0][0])
+                                    fetch[0][0]) + 1
+                                self.tick = [90, x_1, y_1]
+                                fl = 1
                                 break
                             else:
+                                fl = 1
+                                self.tick = [90, x_1, y_1]
                                 self.board[y_1][x_1] = 0
+                                print('ll')
                                 break
                         else:
                             break
+                if fl:
+                    break
 
-    def units_on_board(self, *args, enemy_units):
-        # args - id юнитов в инвинтаре игрока, звыисит от того, как они будут передаваться из бд. enemy_units -
-        # список id юнитов врага, который даётся на вход при начале абсолютно любого боя
-        for hero_unit in args:
+    def units_on_board(self):
+        enemy_sum = 0
+        hero_sum = 0
+        for hero_unit in self.units_qualitys[:5]:
+            hero_sum += int(hero_unit)
+        for enemy_unit in self.units_qualitys[5:]:
+            enemy_sum += int(enemy_unit)
+        if not hero_sum:
             pass
-        for enemy_unit in enemy_units:
-            pass
-        # вроде как-то бесполезно получилось, нигде не используется
+        if not enemy_sum:
+            self.end_battle()
 
 
 class Image1(pygame.sprite.Sprite):
@@ -404,46 +421,49 @@ class Image1(pygame.sprite.Sprite):
         super().__init__(*group)
         self.image = Image1.image
         self.rect = self.image.get_rect()
-        self.rect.x = 80
-        self.rect.y = 90
+        self.rect.x = 80 - 30
+        self.rect.y = 90 - 30
 
     def update(self):
         pass
 
 
-if __name__ == '__main__':
-    pygame.init()
-    pygame.display.set_caption('Сражение')
-    im = Image1()
-    sprites = pygame.sprite.Group()
-    sprites.add(im)
-    pygame.mixer.music.load("music/music_1.mp3")
-    pygame.mixer.music.play(-1)
+def battle_window(number_of_battle):
+    if __name__ == '__main__':
+        pygame.init()
+        pygame.display.set_caption('Сражение')
+        im = Image1()
+        sprites = pygame.sprite.Group()
+        sprites.add(im)
+        pygame.mixer.music.load("music/music_1.mp3")
+        pygame.mixer.music.play(-1)
 
-    size = width, height = 1600, 900
-    screen = pygame.display.set_mode(size)
-    running = True
-    fps = 60
-    clock = pygame.time.Clock()
-    board = Thebattlefield(16, 8)
-    board.start_battle(2)  # тут номер битвы, так думаю будет удобно и просто, просто пронумеровать все битвы
-    board.set_view(80, 90, 90)
+        size = width, height = 1600, 900
+        screen = pygame.display.set_mode(size)
+        running = True
+        fps = 60
+        clock = pygame.time.Clock()
+        board = Thebattlefield(16, 8)
+        board.start_battle(
+            number_of_battle)  # тут номер битвы, так думаю будет удобно и просто, просто пронумеровать все битвы
+        board.set_view(80, 90, 90)
 
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_1:
-                    board.round_move_invent()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_2:
-                    board.round_move_enemy()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_3:
-                    board.cast()
-        screen.fill((0, 0, 0))
-        sprites.draw(screen)
-        board.render(screen)
-        pygame.display.flip()
-        clock.tick(fps)
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_1:
+                        board.round_move_invent()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_3:
+                        board.cast()
+            screen.fill((0, 0, 0))
+            sprites.draw(screen)
+            board.render(screen)
+            pygame.display.flip()
+            clock.tick(fps)
+            board.units_on_board()
+
+
+battle_window(2)

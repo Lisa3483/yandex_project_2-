@@ -12,7 +12,7 @@ from Side_Menu.side_menu import SideMenu
 from Music.Menu_music import Music
 from map.game import Game
 
-flag = 8
+flag = 1
 
 
 class Main:
@@ -28,7 +28,7 @@ class Main:
         self.menu = 'start'
         self.animation_count = 0
         self.unic_number = 0
-        self.fc = Death(self.screen)
+        self.fc = StartStateMenu(self.screen)
 
         while running:
 

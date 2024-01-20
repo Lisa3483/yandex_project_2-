@@ -50,6 +50,7 @@ class Unit:
         cursor.execute(
             f"SELECT unit_min_damage, unit_max_damage, unit_attack FROM units WHERE id = '{number}'")
         fetch = cursor.fetchall()
+        print(fetch)
         self.unit_min_damage = fetch[0][0]
         self.unit_max_damage = fetch[0][1]
         self.unit_attack = fetch[0][2]

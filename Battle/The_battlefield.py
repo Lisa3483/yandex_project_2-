@@ -172,7 +172,7 @@ class Thebattlefield:
                 self.tick[0] -= 1
                 screen.blit(self.sprite_image_bolt,
                             (self.cell_size * self.tick[1] + self.left + 5,
-                            self.cell_size * self.tick[2] + self.top + 5 - 30))
+                             self.cell_size * self.tick[2] + self.top + 5 - 30))
         else:
             pygame.draw.rect(screen, pygame.Color(200, 10, 87),
                              (0, 0, self.width * self.cell_size + (2 * self.left),
@@ -251,33 +251,26 @@ class Thebattlefield:
         # значения таблицы quality меняются на те, что были получены в результате боя
 
     def round_move_invent(self):
-        fl = False
         un = Unit()
         self.lst = sorted(self.lst, key=lambda x: x[1], reverse=True)
         if self.battle_is_running:
             for id in self.lst:
                 if int(id[0]) <= 5:
-                    conn = sqlite3.connect('../DataBase/game.db')
-                    cursor = conn.cursor()
-                    cursor.execute(
-                        f'''SELECT * FROM units_in_inventory''')
-                    rows = cursor.fetchall()
-                    # Закрываем соединение с базой данных
-                    conn.close()
                     fl = False
-
                     for x_0 in range(self.width):
                         for y_0 in range(self.height):
                             if int(self.board[y_0][x_0]) == int(id[0]):
+                                print(self.board[y_0][x_0], 'походил')
                                 while True:
-                                    if not fl:
-                                        for e in pygame.event.get():
+                                    for e in pygame.event.get():
+                                        if not fl:
                                             if e.type == pygame.MOUSEBUTTONDOWN and e.button == 1:
                                                 x_1, y_1 = (pygame.mouse.get_pos()[0] - self.left) // self.cell_size, (
                                                         pygame.mouse.get_pos()[1] - self.top) // self.cell_size
                                                 if x_1 <= 15 and y_1 <= 7:
                                                     if self.board[y_1][x_1] == 0:
                                                         self.board[y_1][x_1] = int(id[0])
+                                                        fl = True
                                                         self.board[y_0][x_0] = 0
                                                     if self.board[y_1][x_1] > 5:
                                                         conn = sqlite3.connect('../DataBase/game.db')
@@ -296,22 +289,89 @@ class Thebattlefield:
                                                         self.half_hp_lst[self.board[y_1][x_1] - 1] = hp % int(
                                                             fetch[0][0])
                                                         if hp // int(fetch[0][0]) + self.half_hp_lst[
-                                                            self.board[y_1][x_1] - 1] and \
+                                                            self.board[y_1][x_1] - 1] > 0 and \
                                                                 self.half_hp_lst[self.board[y_1][x_1] - 1]:
                                                             self.units_qualitys[self.board[y_1][x_1] - 1] = hp // int(
                                                                 fetch[0][0]) + 1
-                                                        elif hp // int(fetch[0][0]):
+                                                            if x_1 - 1 >= 0 and x_1 + 1 <= 15:
+                                                                if y_1 - 1 > 0 and y_1 + 1 <= 7:
+                                                                    if self.board[y_1 - 1][x_1] == 0:
+                                                                        self.board[y_1 - 1][x_1] = id[0]
+                                                                    elif self.board[y_1 - 1][x_1 - 1] == 0:
+                                                                        self.board[y_1 - 1][x_1 - 1] = id[0]
+                                                                    elif self.board[y_1 - 1][x_1 + 1] == 0:
+                                                                        self.board[y_1 - 1][x_1 + 1] = id[0]
+                                                                    elif self.board[y_1 + 1][x_1 - 1] == 0:
+                                                                        self.board[y_1 + 1][x_1 - 1] = id[0]
+                                                                    elif self.board[y_1][x_1 - 1] == 0:
+                                                                        self.board[y_1][x_1 - 1] = id[0]
+                                                                    elif self.board[y_1][x_1 + 1] == 0:
+                                                                        self.board[y_1][x_1 + 1] = id[0]
+                                                                    elif self.board[y_1 + 1][x_1 + 1] == 0:
+                                                                        self.board[y_1 + 1][x_1 + 1] = id[0]
+                                                                    elif self.board[y_1 + 1][x_1] == 0:
+                                                                        self.board[y_1 + 1][x_1] = id[0]
+                                                                else:
+                                                                    if self.board[y_1 - 1][x_1] == 0:
+                                                                        self.board[y_1 - 1][x_1] = id[0]
+                                                                    elif self.board[y_1 + 1][x_1] == 0:
+                                                                        self.board[x_1 + 1][x_1] = id[0]
+                                                            else:
+                                                                if x_1 - 1 >= 0 and x_1 + 1 <= 15:
+                                                                    if self.board[y_1][x_1 - 1] == 0:
+                                                                        self.board[y_1][x_1 - 1] = id[0]
+                                                                    elif self.board[y_1][x_1 + 1] == 0:
+                                                                        self.board[y_1][x_1 + 1] = id[0]
+                                                        elif hp // int(fetch[0][0]) > 0:
                                                             self.units_qualitys[self.board[y_1][x_1] - 1] = hp // int(
                                                                 fetch[0][0])
+                                                            if x_1 - 1 >= 0 and x_1 + 1 <= 15:
+                                                                if y_1 - 1 > 0 and y_1 + 1 <= 7:
+                                                                    if self.board[y_1 - 1][x_1] == 0:
+                                                                        self.board[y_1 - 1][x_1] = id[0]
+                                                                    elif self.board[y_1 - 1][x_1 - 1] == 0:
+                                                                        self.board[y_1 - 1][x_1 - 1] = id[0]
+                                                                    elif self.board[y_1 - 1][x_1 + 1] == 0:
+                                                                        self.board[y_1 - 1][x_1 + 1] = id[0]
+                                                                    elif self.board[y_1 + 1][x_1 - 1] == 0:
+                                                                        self.board[y_1 + 1][x_1 - 1] = id[0]
+                                                                    elif self.board[y_1][x_1 - 1] == 0:
+                                                                        self.board[y_1][x_1 - 1] = id[0]
+                                                                    elif self.board[y_1][x_1 + 1] == 0:
+                                                                        self.board[y_1][x_1 + 1] = id[0]
+                                                                    elif self.board[y_1 + 1][x_1 + 1] == 0:
+                                                                        self.board[y_1 + 1][x_1 + 1] = id[0]
+                                                                    elif self.board[y_1 + 1][x_1] == 0:
+                                                                        self.board[y_1 + 1][x_1] = id[0]
+                                                                else:
+                                                                    if self.board[y_1 - 1][x_1] == 0:
+                                                                        self.board[y_1 - 1][x_1] = id[0]
+                                                                    elif self.board[y_1 + 1][x_1] == 0:
+                                                                        self.board[x_1 + 1][x_1] = id[0]
+                                                            else:
+                                                                if x_1 - 1 >= 0 and x_1 + 1 <= 15:
+                                                                    if self.board[y_1][x_1 - 1] == 0:
+                                                                        self.board[y_1][x_1 - 1] = id[0]
+                                                                    elif self.board[y_1][x_1 + 1] == 0:
+                                                                        self.board[y_1][x_1 + 1] = id[0]
+
                                                         else:
-                                                            self.board[y_1][x_1] = 0
+                                                            self.board[y_1][x_1] = self.board[y_0][x_0]
+                                                            self.board[y_0][x_0] = 0
                                                         fl = True
+
+                                        if fl:
+                                            break
                                     if fl:
                                         break
-                            break
-                        break
 
-                else:
+                            if fl:
+                                break
+                        if fl:
+                            break
+
+                elif int(id[0]) >= 6:
+                    fl_enemy = False
                     conn = sqlite3.connect('../DataBase/game.db')
                     cursor = conn.cursor()
                     cursor.execute(
@@ -322,46 +382,142 @@ class Thebattlefield:
                     for x_0 in range(self.width):
                         for y_0 in range(self.height):
                             if int(self.board[y_0][x_0]) == int(id[0]):
+                                fl_enemy = True
                                 for x_1 in range(self.width):
                                     for y_1 in range(self.height):
                                         if int(self.board[y_1][x_1]) <= 5:
+                                            print(self.board[y_0][x_0], 'походил')
                                             x_last = 0
                                             y_last = 0
                                             if x_0 > x_1 and y_0 > y_1:
                                                 x_last = x_0 - x_1 - 1
-                                                y_last = y_0 - y_1 + 1
+                                                y_last = y_0 - y_1 - 1
                                             elif x_0 < x_1 and y_0 > y_1:
                                                 x_last = x_1 - x_0 + 1
                                                 y_last = y_0 - y_1 + 1
                                             elif x_0 < x_1 and y_0 < y_1:
                                                 x_last = x_1 - x_0 + 1
-                                                y_last = y_1 - y_0 - 1
+                                                y_last = y_1 - y_0 + 1
                                             elif x_0 > x_1 and y_0 < y_1:
-                                                x_last = x_0 - x_1 - 1
-                                                y_last = y_1 - y_0 - 1
+                                                x_last = x_0 - x_1 + 1
+                                                y_last = y_1 - y_0 + 1
                                             if abs(x_last) + abs(y_last) <= int(id[1]):
-                                                self.board[y_1][x_1] = self.board[y_0][x_0]
-                                                self.board[y_0][x_0] = 0
+                                                conn = sqlite3.connect('../DataBase/game.db')
+                                                cursor = conn.cursor()
+                                                cursor.execute(
+                                                    f"SELECT unit_hp FROM units WHERE id='{self.board[y_1][x_1]}'")
+                                                fetch = cursor.fetchall()
+                                                conn.close()
+                                                damage = un.get_total_damage(self.board[y_0][x_0],
+                                                                             self.board[y_1][x_1])
+
+                                                hp = (int(fetch[0][0])) * int(
+                                                    self.units_qualitys[self.board[y_1][x_1] - 1] - 1) + + \
+                                                         self.half_hp_lst[self.board[y_1][x_1] - 1]
+                                                hp = hp - int(damage)
+                                                self.half_hp_lst[self.board[y_1][x_1] - 1] = hp % int(
+                                                    fetch[0][0])
+                                                if hp // int(fetch[0][0]) + self.half_hp_lst[
+                                                    self.board[y_1][x_1] - 1] and \
+                                                        self.half_hp_lst[self.board[y_1][x_1] - 1]:
+                                                    self.units_qualitys[self.board[y_1][x_1] - 1] = hp // int(
+                                                        fetch[0][0]) + 1
+                                                    if x_1 - 1 >= 0 and x_1 + 1 <= 15:
+                                                        if y_1 - 1 > 0 and y_1 + 1 <= 7:
+                                                            if self.board[y_1 - 1][x_1] == 0:
+                                                                self.board[y_1 - 1][x_1] = id[0]
+                                                            elif self.board[y_1 - 1][x_1 - 1] == 0:
+                                                                self.board[y_1 - 1][x_1 - 1] = id[0]
+                                                            elif self.board[y_1 - 1][x_1 + 1] == 0:
+                                                                self.board[y_1 - 1][x_1 + 1] = id[0]
+                                                            elif self.board[y_1 + 1][x_1 - 1] == 0:
+                                                                self.board[y_1 + 1][x_1 - 1] = id[0]
+                                                            elif self.board[y_1][x_1 - 1] == 0:
+                                                                self.board[y_1][x_1 - 1] = id[0]
+                                                            elif self.board[y_1][x_1 + 1] == 0:
+                                                                self.board[y_1][x_1 + 1] = id[0]
+                                                            elif self.board[y_1 + 1][x_1 + 1] == 0:
+                                                                self.board[y_1 + 1][x_1 + 1] = id[0]
+                                                            elif self.board[y_1 + 1][x_1] == 0:
+                                                                self.board[y_1 + 1][x_1] = id[0]
+                                                        else:
+                                                            if self.board[y_1 - 1][x_1] == 0:
+                                                                self.board[y_1 - 1][x_1] = id[0]
+                                                            elif self.board[y_1 + 1][x_1] == 0:
+                                                                self.board[x_1 + 1][x_1] = id[0]
+                                                    else:
+                                                        if x_1 - 1 >= 0 and x_1 + 1 <= 15:
+                                                            if self.board[y_1][x_1 - 1] == 0:
+                                                                self.board[y_1][x_1 - 1] = id[0]
+                                                            elif self.board[y_1][x_1 + 1] == 0:
+                                                                self.board[y_1][x_1 + 1] = id[0]
+                                                elif hp // int(fetch[0][0]):
+                                                    self.units_qualitys[self.board[y_1][x_1] - 1] = hp // int(
+                                                        fetch[0][0])
+                                                    if x_1 - 1 >= 0 and x_1 + 1 <= 15:
+                                                        if y_1 - 1 > 0 and y_1 + 1 <= 7:
+                                                            if self.board[y_1 - 1][x_1] == 0:
+                                                                self.board[y_1 - 1][x_1] = id[0]
+                                                            elif self.board[y_1 - 1][x_1 - 1] == 0:
+                                                                self.board[y_1 - 1][x_1 - 1] = id[0]
+                                                            elif self.board[y_1 - 1][x_1 + 1] == 0:
+                                                                self.board[y_1 - 1][x_1 + 1] = id[0]
+                                                            elif self.board[y_1 + 1][x_1 - 1] == 0:
+                                                                self.board[y_1 + 1][x_1 - 1] = id[0]
+                                                            elif self.board[y_1][x_1 - 1] == 0:
+                                                                self.board[y_1][x_1 - 1] = id[0]
+                                                            elif self.board[y_1][x_1 + 1] == 0:
+                                                                self.board[y_1][x_1 + 1] = id[0]
+                                                            elif self.board[y_1 + 1][x_1 + 1] == 0:
+                                                                self.board[y_1 + 1][x_1 + 1] = id[0]
+                                                            elif self.board[y_1 + 1][x_1] == 0:
+                                                                self.board[y_1 + 1][x_1] = id[0]
+                                                        else:
+                                                            if self.board[y_1 - 1][x_1] == 0:
+                                                                self.board[y_1 - 1][x_1] = id[0]
+                                                            elif self.board[y_1 + 1][x_1] == 0:
+                                                                self.board[x_1 + 1][x_1] = id[0]
+                                                    else:
+                                                        if x_1 - 1 >= 0 and x_1 + 1 <= 15:
+                                                            if self.board[y_1][x_1 - 1] == 0:
+                                                                self.board[y_1][x_1 - 1] = id[0]
+                                                            elif self.board[y_1][x_1 + 1] == 0:
+                                                                self.board[y_1][x_1 + 1] = id[0]
+                                                else:
+                                                    self.board[y_1][x_1] = self.board[y_0][x_0]
+                                                    self.board[y_0][x_0] = 0
+                                                    fl_enemy = True
+
+
                                             else:
-                                                if int(id[1]) - abs(x_last) and self.board[y_1][
-                                                    int(id[1]) - abs(x_last)] == 0:
+                                                if int(id[1]) - abs(x_last) and \
+                                                        self.board[y_1][int(id[1]) - abs(x_last)] == 0:
                                                     self.board[y_1][int(id[1]) - abs(x_last)] = self.board[y_0][x_0]
                                                     self.board[y_0][x_0] = 0
-                                                elif int(id[1]) - abs(y_last) and self.board[int(id[1]) - abs(y_last)][
-                                                    x_1] == 0:
+                                                    fl_enemy = True
+                                                elif int(id[1]) - abs(y_last) and self.board[int(id[1]) -
+                                                                                             abs(y_last)][x_1] == 0:
                                                     self.board[int(id[1]) - abs(y_last)][x_1] = self.board[y_0][x_0]
                                                     self.board[y_0][x_0] = 0
-                                                elif not int(id[1]) - abs(x_last) and self.board[y_0][
-                                                    x_last - int(id[1])] == 0:
+                                                    fl_enemy = True
+                                                elif not int(id[1]) - abs(x_last) and \
+                                                        self.board[y_0][x_last - int(id[1])] == 0:
                                                     self.board[y_0][x_last - int(id[1])] = self.board[y_0][x_0]
                                                     self.board[y_0][x_0] = 0
-                                                elif not int(id[1]) - abs(y_last) and self.board[y_last - int(id[1])][
-                                                    x_last] == 0:
+                                                    fl_enemy = True
+                                                elif not int(id[1]) - abs(y_last) and \
+                                                        self.board[y_last - int(id[1])][x_last] == 0:
                                                     self.board[y_last - int(id[1])][x_last] = self.board[y_0][x_0]
                                                     self.board[y_0][x_0] = 0
+                                                    fl_enemy = True
+                                        if fl_enemy:
                                             break
+                                    if fl_enemy:
                                         break
-                continue
+                            if fl_enemy:
+                                break
+                        if fl_enemy:
+                            break
 
     def cast(self):
         fl = 0
@@ -393,7 +549,6 @@ class Thebattlefield:
                                 fl = 1
                                 self.tick = [90, x_1, y_1]
                                 self.board[y_1][x_1] = 0
-                                print('ll')
                                 break
                         else:
                             break

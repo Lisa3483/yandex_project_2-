@@ -3,12 +3,14 @@ import sqlite3
 import sys
 
 import pygame
-from map import Map
+
+from End_windows import death_window
+from End_windows import end_game_window
 from Units import Unit
 from database_creator_1 import DataBasecreator
+from map import Map
 from spell_book import Spell_book
-from End_windows import end_game_window
-from End_windows import death_window
+
 
 class Thebattlefield:
     # создание поля
@@ -169,6 +171,7 @@ class Thebattlefield:
                             place = text.get_rect(center=(
                                 self.cell_size * x + self.left + 5 + 40, self.cell_size * y + self.top + 5 - 30 + 75))
                             screen.blit(text, place)
+
             if self.tick[0] > 0:
                 self.tick[0] -= 1
                 screen.blit(self.sprite_image_bolt,
@@ -258,6 +261,7 @@ class Thebattlefield:
         self.lst = sorted(self.lst, key=lambda x: x[1], reverse=True)
         if self.battle_is_running:
             for id in self.lst:
+                self.render(self.screen)
                 if int(id[0]) <= 5:
                     fl = False
                     for x_0 in range(self.width):
@@ -510,6 +514,7 @@ class Thebattlefield:
                                                         self.board[y_last - int(id[1])][x_last] == 0:
                                                     self.board[y_last - int(id[1])][x_last] = self.board[y_0][x_0]
                                                     self.board[y_0][x_0] = 0
+
                                                     fl_enemy = True
                                         if fl_enemy:
                                             break
@@ -621,7 +626,6 @@ def battle_window(number_of_battle):
                             else:
                                 Map.FLAG_ENEMY_2 = False
 
-
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_3:
                         board.cast()
@@ -631,6 +635,3 @@ def battle_window(number_of_battle):
             pygame.display.flip()
             clock.tick(fps)
             board.units_on_board()
-
-
-battle_window(2)

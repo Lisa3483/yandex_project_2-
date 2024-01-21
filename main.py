@@ -24,18 +24,17 @@ class Main:
         self.name = ''
         pygame.display.set_caption('The little world')
         running = True
+        self.f = True
         self.menu = 'start'
         self.animation_count = 0
         self.unic_number = 0
         self.fc = StartStateMenu(self.screen)
 
         while running:
-
-            print(flag)
-            self.rer()
-            self.flags()
             self.windows()
             self.events()
+            self.rer()
+            self.flags()
 
     def events(self):
         self.fc.all_events()
@@ -48,7 +47,9 @@ class Main:
         flag = self.fc.flagg()
 
     def flags(self):
+        global flag
         if flag == 1:
+            self.menu = 'start'
             self.fc = StartStateMenu(self.screen)
 
         if flag == 3:
@@ -67,10 +68,15 @@ class Main:
             self.menu = 'side'
             self.clock = Game(self.screen, self.first_time).get_clock()
 
-
         elif flag == 2:
             self.fc = Saves(self.screen, self.menu)
-
+            self.f = Saves(self.screen, self.menu).ff()
+            self.name = Saves(self.screen, self.menu).get_name()
+            print(self.name)
+            if not self.f:
+                self.unic_number = Saves(self.screen, self.menu).game()
+                flag = self.fc.new_game()
+                self.f = True
 
         elif flag == 8:
             self.fc = Death(self.screen)
@@ -86,9 +92,12 @@ class Main:
 
         elif flag == 12:
             self.fc = SaveGame(self.screen, self.name, self.menu, self.unic_number)
+            self.f = SaveGame(self.screen, self.name, self.menu, self.unic_number).ff()
             if self.unic_number == 0:
                 self.unic_number = SaveGame(self.screen, self.name, self.menu, 0).get_unic_number()
-
+            if not self.f:
+                flag = self.fc.new_game()
+                self.f = True
 
 
 

@@ -36,22 +36,27 @@ class EndGame:
         stats = ['Смерти', 'Убито', 'Время', 'Выиграно', 'Сыграно']
         pygame.draw.line(self.screen, 'white', (20, 325), (self.x - 21, 325), 2)
         font = pygame.font.Font(None, 38)
+        con = sqlite3.connect('DataBase/stat.db')
+        cur = con.cursor()
+        result = cur.execute("SELECT * FROM stats WHERE unic_number = ?", (self.game,)).fetchall()
+        con.close()
+
         for i in range(5):
             pygame.draw.rect(self.screen, 'white',
                              (20 + ((self.x - 40) // 5 * i), 250, (self.x - 40) // 5, 150), 2)
             text = font.render(stats[i], True, 'white')
             self.screen.blit(text, (35 + ((self.x - 40) // 5 * i), 275))
+            text = font.render(str(result[0][i]), True, 'white')
+            self.screen.blit(text, (35 + ((self.x - 40) // 5 * i), 350))
         pygame.draw.rect(self.screen, 'white', (self.x // 2 - 100, 450, 200, 70), 5)
         font = pygame.font.Font(None, 48)
         text = font.render('В меню', True, 'white')
         w = text.get_rect().width
         h = text.get_rect().height
         self.screen.blit(text, (self.x // 2 - w // 2, 450 + h // 2))
-        con = sqlite3.connect('DataBase/stat.db')
-        cur = con.cursor()
-        result = cur.execute("SELECT * FROM stats WHERE unic_number = ?", (self.game,)).fetchall()
-        con.close()
         pygame.display.flip()
+
+
 
     def button(self):
         if self.x // 2 - 100 <= self.mouse_x <= self.x // 2 + 100 and 450 <= self.mouse_y <= 520:

@@ -1,13 +1,13 @@
 import pygame
 import sqlite3
 
+r = True
 
 class SaveGame:
     def __init__(self, screen, name, menu, unic_number):
         self.x, self.y = 800, 600
         self.name = name
         self.menu = menu
-        self.unic_number = unic_number
         self.unic_number = unic_number
         self.flag = 12
         self.screen = screen
@@ -26,6 +26,7 @@ class SaveGame:
         return self.flag
 
     def okno(self):
+
         image = pygame.image.load('images/sstone.jpeg').convert_alpha()
         new_image = pygame.transform.scale(image, (self.x, self.y))
         self.screen.blit(new_image, (0, 0))
@@ -42,6 +43,8 @@ class SaveGame:
         pygame.display.flip()
 
     def buttons(self):
+        global r
+        r = True
         self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
         if 5 < self.mouse_x < 115 and self.y - 65 < self.mouse_y < self.y - 15:
             if self.menu == 'start':
@@ -51,18 +54,22 @@ class SaveGame:
 
         con = sqlite3.connect('DataBase/stat.db')
         cur = con.cursor()
-
         for i in range(4):
             if 5 + i * 130 < self.mouse_y < 130 + i * 130 and 5 < self.mouse_x < self.x - 5:
                 if self.unic_number == 0:
                     con = sqlite3.connect('DataBase/stat.db')
                     cur = con.cursor()
-                    result = cur.execute("""SELECT * FROM stats""").fetchall()[0]
-                    self.id = result[0] + 1
+                    result = cur.execute("""SELECT * FROM stats""").fetchall()
+                    result.sort(reverse=True)
+                    if result == []:
+                        f = 0
+                    else:
+                        f = result[0][-1]
+                    self.id = f + 1
                     self.unic_number = self.id
                     res = """INSERT INTO stats (unic_number, deaths, kills, time, wins, battles) 
-                    VALUES (?, 0, 0, 0, 0, 0);"""
-                    res1 = (self.id,)
+                    VALUES (?, 0, 0, 0, 0, 0)"""
+                    res1 = (self.unic_number,)
                     cur.execute(res, res1)
                     con.commit()
                     res2 = """INSERT INTO save_game (unic_number, name, id) VALUES (?, ?, ?)"""
@@ -70,6 +77,7 @@ class SaveGame:
                     cur.execute(res2, res1)
                     con.commit()
                     con.close()
+                    r = False
                 else:
 
                     res = """INSERT INTO save_game (unic_number, name, id) VALUES (?, ?, ?);"""
@@ -77,10 +85,15 @@ class SaveGame:
                     cur.execute(res, res1)
                     con.commit()
                     self.okno()
-                self.flag = 7
         con.close()
 
+    def new_game(self):
+        self.flag = 7
+        return self.flag
 
+    def ff(self):
+        global r
+        return r
 
     def baza(self):
 

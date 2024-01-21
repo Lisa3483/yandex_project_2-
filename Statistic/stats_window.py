@@ -58,6 +58,7 @@ class Statistics:
         con = sqlite3.connect('DataBase/stat.db')
         cur = con.cursor()
         result = cur.execute("SELECT * FROM stats").fetchall()
+        result.sort(reverse=True)
         c = 0
         if len(result) == 0:
             font = pygame.font.Font(None, 38)

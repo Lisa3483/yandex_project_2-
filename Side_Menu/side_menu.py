@@ -38,7 +38,7 @@ class SideMenu:
                 Buttons(self.screen, self.mouse_x, self.mouse_y)
 
     def text_button(self):
-        words = ["Обратно к игре", "Сохранить игру", "Статистика", "Показать результаты", "Выход"]
+        words = ["Обратно к игре", "Статистика", "Показать результаты", "Выход"]
 
         font = pygame.font.Font(None, 28)
 
@@ -66,17 +66,15 @@ class Buttons:
         self.click_buttons(mouse_x, mouse_y)
 
     def click_buttons(self, mouse_x, mouse_y):
+        print(self.flag)
         if 250 <= mouse_x <= 550:
             if 220 <= mouse_y <= 270:
                 self.flag = 3
 
             elif 290 <= mouse_y <= 340:
-                self.flag = 12
-
-            elif 360 <= mouse_y <= 410:
                 self.flag = 9
 
-            elif 430 <= mouse_y <= 480:
+            elif 360 <= mouse_y <= 410:
                 self.flag = 4
 
             elif 160 <= mouse_y <= 210:

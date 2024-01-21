@@ -30,16 +30,13 @@ class Game:
         self.enemy2_x = 800
         self.enemy2_y = 50
         self.map = Map(self)
-        if self.first_time:
-
-            self.draw_hero()
+        self.draw_hero()
 
         pygame.display.update()
 
 
     def flagg(self):
         return self.flag
-
 
 
     def okno(self):

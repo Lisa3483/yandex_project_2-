@@ -3,7 +3,7 @@ from pygame.locals import *
 from pygame import Rect
 from map.F_draw_map import read_tiles, read_col_tiles
 import numpy as np
-
+from Battle import battle_window
 debug = False
 
 TILE_W = 16
@@ -36,10 +36,13 @@ class Map:
             if ((self.offset[0] * (-1) > 110) and (self.offset[0] * (-1) < 160)) and (self.offset[1] * (-1) > 300) and \
                     (self.offset[1] * (-1) < 350):
                 print("на вас напали")
+                battle_window(1)
+
         if FLAG_ENEMY_2:
             if ((self.offset[0] * (-1) > 425) and (self.offset[0] * (-1) < 475)) and (self.offset[1] * (-1) > 125) and \
                     (self.offset[1] * (-1) < 175):
                 print("на вас напали")
+                battle_window(2)
 
     def load_tileset(self):
 

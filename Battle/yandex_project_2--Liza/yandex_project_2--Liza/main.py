@@ -7,7 +7,7 @@ from Name_window.name import Name
 from Save.save_game import SaveGame
 from Save.load_game import Saves
 from End_windows.death_window import Death
-from End_windows.End_windows.end_game_window import EndGame
+from End_windows.end_game_window import EndGame
 from Side_Menu.side_menu import SideMenu
 from Music.Menu_music import Music
 from map.game import Game

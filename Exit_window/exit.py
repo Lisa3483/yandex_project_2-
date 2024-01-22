@@ -27,7 +27,6 @@ class Exit:
         pygame.draw.rect(self.screen, (255, 255, 255), (98, 98, 604, 404), 2)
         pygame.draw.rect(self.screen, (255, 255, 255), (108, 108, 584, 384), 2)
 
-
         font = pygame.font.Font(None, 40)
         text = font.render("Вы точно хотите выйти?", True, (255, 255, 255))
         self.screen.blit(text, (240, 140))
@@ -60,5 +59,3 @@ class Exit:
                 self.flag = 1
             else:
                 self.flag = 10
-
-

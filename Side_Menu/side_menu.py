@@ -17,7 +17,7 @@ class SideMenu:
         new_image = pygame.transform.scale(image, (self.x, self.y))
         self.screen.blit(new_image, (0, 0))
 
-        for i in range(5):
+        for i in range(4):
             pygame.draw.rect(self.screen, color, (250, 160 + i * 70, 300, 50), 0)
             pygame.draw.rect(self.screen, (255, 255, 255), (250 - 2, 160 + i * 70 - 2, 304, 54), 2)
 
@@ -38,7 +38,7 @@ class SideMenu:
                 Buttons(self.screen, self.mouse_x, self.mouse_y)
 
     def text_button(self):
-        words = ["Обратно к игре", "Сохранить игру", "Сохранения", "Статистика", "Выход"]
+        words = ["Обратно к игре", "Статистика", "Показать результаты", "Выход"]
 
         font = pygame.font.Font(None, 28)
 
@@ -60,27 +60,25 @@ class SideMenu:
 
 class Buttons:
     def __init__(self, screen, mouse_x, mouse_y):
-        self.flag = 1
+        self.flag = 10
         self.screen = screen
         self.x, self.y = 800, 600
         self.click_buttons(mouse_x, mouse_y)
 
     def click_buttons(self, mouse_x, mouse_y):
+        print(self.flag)
         if 250 <= mouse_x <= 550:
             if 220 <= mouse_y <= 270:
-                self.flag = 7
-
-            elif 290 <= mouse_y <= 340:
-                self.flag = 2
-
-            elif 360 <= mouse_y <= 410:
                 self.flag = 3
 
-            elif 440 <= mouse_y <= 480:
+            elif 290 <= mouse_y <= 340:
+                self.flag = 9
+
+            elif 360 <= mouse_y <= 410:
                 self.flag = 4
 
             elif 160 <= mouse_y <= 210:
-                pass
+                self.flag = 7
 
     def flagss(self):
         return self.flag

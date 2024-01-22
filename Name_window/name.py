@@ -19,6 +19,7 @@ class Name:
         global text
         return text
 
+
     def all_events(self):
         global color, active, text, warning
         for event in pygame.event.get():
@@ -75,7 +76,7 @@ class Name:
             warning = 'Минимальное количество символов - 5'
 
         else:
-            self.flag = 7
+            self.flag = 12
 
     def flagg(self):
         return self.flag

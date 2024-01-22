@@ -47,4 +47,3 @@ class Death:
         self.screen.blit(text, (self.x - self.x // 6 - 100 - w // 2, 475 - h // 2))
 
         pygame.display.flip()
-

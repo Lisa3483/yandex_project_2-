@@ -1,6 +1,9 @@
 import pygame
 import sqlite3
 
+unic_number = 0
+r = True
+
 
 class Saves:
     def __init__(self, screen, menu):
@@ -9,9 +12,13 @@ class Saves:
         self.x, self.y = 800, 600
         self.flag = 2
         self.menu = menu
+        self.name = ''
 
     def flagg(self):
         return self.flag
+
+    def get_name(self):
+        return self.name
 
     def all_events(self):
         for event in pygame.event.get():
@@ -38,12 +45,38 @@ class Saves:
         pygame.display.flip()
 
     def buttons(self):
+        global unic_number, r
+        r = True
         self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
         if 5 < self.mouse_x < 115 and self.y - 65 < self.mouse_y < self.y - 15:
             if self.menu == 'start':
                 self.flag = 1
             else:
                 self.flag = 10
+
+        con = sqlite3.connect('DataBase/stat.db')
+        cur = con.cursor()
+        for i in range(4):
+            if 5 + i * 130 < self.mouse_y < 130 + i * 130 and 5 < self.mouse_x < self.x - 5:
+
+                result = cur.execute("""SELECT name FROM save_game WHERE id = ?""", (i + 1,)).fetchall()
+                result.sort()
+                res1 = cur.execute("""SELECT unic_number FROM save_game WHERE id = ?""", (i + 1,)).fetchall()
+                self.name = result[0][0]
+                if result[0][0] != 'Пустой слот':
+                    unic_number = res1[0][0]
+                    r = False
+    def game(self):
+        global unic_number
+        return unic_number
+
+    def new_game(self):
+        self.flag = 7
+        return self.flag
+
+    def ff(self):
+        global r
+        return r
 
     def baza(self):
         con = sqlite3.connect('DataBase/stat.db')
@@ -59,4 +92,3 @@ class Saves:
             self.screen.blit(text, (self.x // 4, 45 + 130 * c))
             c += 1
         con.close()
-

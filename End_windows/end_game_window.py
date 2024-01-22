@@ -21,7 +21,6 @@ class EndGame:
                 self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
                 self.button()
 
-
     def okno(self):
         image = pygame.image.load('images/zakat.png').convert_alpha()
         new_image = pygame.transform.scale(image, (self.x, self.y))
@@ -34,6 +33,7 @@ class EndGame:
         text = font.render('Результаты:', True, 'white')
         self.screen.blit(text, (50, 200))
         stats = ['Смерти', 'Убито', 'Время', 'Выиграно', 'Сыграно']
+        stats_1 = [1, 4, '5:13', 1, 2]
         pygame.draw.line(self.screen, 'white', (20, 325), (self.x - 21, 325), 2)
         font = pygame.font.Font(None, 38)
         for i in range(5):
@@ -41,7 +41,10 @@ class EndGame:
                              (20 + ((self.x - 40) // 5 * i), 250, (self.x - 40) // 5, 150), 2)
             text = font.render(stats[i], True, 'white')
             self.screen.blit(text, (35 + ((self.x - 40) // 5 * i), 275))
+            text = font.render(str(stats_1[i]), True, 'white')
+            self.screen.blit(text, (35 + ((self.x - 40) // 5 * i), 350))
         pygame.draw.rect(self.screen, 'white', (self.x // 2 - 100, 450, 200, 70), 5)
+
         font = pygame.font.Font(None, 48)
         text = font.render('В меню', True, 'white')
         w = text.get_rect().width
